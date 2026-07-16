@@ -19,7 +19,8 @@ This has consequences for how you work here:
 
 ## 2. What this codebase is
 
-**STATUS: filled in 2026-07-16 after reading every file. Owner confirmation pending.**
+**STATUS: filled in 2026-07-16 after reading every file. Files renamed to working
+names and pushed to GitHub the same day. Owner confirmation of the description pending.**
 
 ### Stack and serving
 
@@ -28,35 +29,36 @@ Pure static site. Plain HTML with all CSS in a `<style>` block and all JavaScrip
 Google Fonts loaded from a CDN (Cormorant Garamond + Inter). Serve the files as-is from
 any web server.
 
-**However: the site is not currently runnable as checked in.** The files are stored
-under `Source/` with placeholder names (`file1.txt` etc.) instead of the names the
-pages reference (`index.html`, `publish.html`, `publications.js`). See "Broken or
-suspicious" below.
+Version control: git, pushed to `git@github.com:Shreedhar-Gangwar/Arrjava.git` (branch
+`main`). Commit identity is the owner's (shreedhargangwarwork@gmail.com). Per the
+owner's instruction, do NOT add Claude co-author lines or any Claude attribution to
+commits in this repo.
 
 ### Every file
 
 - `CLAUDE.md` — this guide.
-- `Source/Arrjava Website.html` — the main (and only public) page: a one-page site with
-  hero, practice areas, maxims ribbon, philosophy, two partner profiles, publications
-  grid, contact. This is the NEWER of the two homepage versions (6 practice areas, two
-  partners, opening curtain animation, an "EDITING GUIDE" comment for the owner at the
-  top). It expects a `publications.js` file in the same directory.
-- `Source/file1.txt` — an EARLIER DRAFT of the same homepage (4 practice areas, one
-  partner "Ravi Srivastava", no opening curtain, different meta description). Superseded
-  by `Arrjava Website.html`. Do not edit this one by mistake; confirm with the owner
-  whether it can be archived.
-- `Source/file2.txt` — this is `publish.html`, the private "Publishing Desk" admin page
-  (`noindex, nofollow`). A form where the owner composes a publication, previews it, and
-  downloads a regenerated `publications.js` containing all existing publications plus
-  the new one, newest first. Entries with the same title-derived `id` replace the older
-  entry rather than duplicating it.
-- `Source/file3.txt` — this is `publications.js`, THE CONTENT DATABASE (see landmines).
-  Defines `window.ARRJAVA_PUBLICATIONS`, an array of publication objects
+- `index.html` — the main (and only public) page: a one-page site with hero, practice
+  areas, maxims ribbon, philosophy, two partner profiles, publications grid, contact.
+  Has an "EDITING GUIDE" comment for the owner at the top. Loads `publications.js`
+  from the same directory.
+- `publish.html` — the private "Publishing Desk" admin page (`noindex, nofollow`).
+  A form where the owner composes a publication, previews it, and downloads a
+  regenerated `publications.js` containing all existing publications plus the new one,
+  newest first. Entries with the same title-derived `id` replace the older entry
+  rather than duplicating it.
+- `publications.js` — THE CONTENT DATABASE (see landmines). Defines
+  `window.ARRJAVA_PUBLICATIONS`, an array of publication objects
   (`id`, `category`, `date`, `title`, `abstract`, `body` as HTML). Currently holds
   3 publications dated April–June 2026. Irreplaceable content.
-- `Source/file4.txt` — an SVG logo/wordmark (mark + "ARRJAVA" text, 420×140). Not
-  referenced by any page — the pages draw their own inline SVG marks. Purpose unclear;
-  probably for letterhead/social use. Do not delete without asking.
+- `logo.svg` — an SVG logo/wordmark (mark + "ARRJAVA" text, 420×140). Not referenced
+  by any page — the pages draw their own inline SVG marks. Purpose unclear; probably
+  for letterhead/social use. Do not delete without asking.
+- `archive/old-homepage-draft.html` — an EARLIER DRAFT of the homepage (4 practice
+  areas, one partner "Ravi Srivastava", no opening curtain). Superseded by
+  `index.html`. Never edit this by mistake; kept only for reference.
+
+(The files originally arrived as `Source/file1.txt`–`file4.txt` etc.; they were renamed
+to the above on 2026-07-16 — see git history, commit "Rename source files".)
 
 ### How the files reference each other
 
@@ -73,16 +75,14 @@ suspicious" below.
 
 ### How to run it locally
 
-As stored, you cannot — the filenames don't match. Once the files are renamed/copied to
-one directory as `index.html` (from `Arrjava Website.html`), `publish.html` (from
-`file2.txt`) and `publications.js` (from `file3.txt`):
+From the repo root (on this Windows machine the command is `python`, not `python3`):
 
 ```
-python3 -m http.server 8000
+python -m http.server 8000
 ```
 
-then open `http://localhost:8000/`. That rename has NOT been done and needs the owner's
-go-ahead, since it restructures the folder.
+then open `http://localhost:8000/`. Verified working 2026-07-16: all four files serve
+with HTTP 200 and the publications section shows all 3 pieces.
 
 ### Conventions actually observed
 
@@ -99,17 +99,10 @@ go-ahead, since it restructures the folder.
 
 ### Broken, half-finished, or suspicious
 
-1. **File naming (blocks everything).** The real site files sit in `Source/` as
-   `.txt` files with placeholder names. Until renamed, neither page can load
-   `publications.js`, so the main page shows an empty publications section and the
-   publishing desk sees 0 existing publications — which is exactly the data-loss
-   scenario in landmine #2. Highest-priority fix, needs owner confirmation.
-2. **Two versions of the homepage exist** (`Arrjava Website.html` newer, `file1.txt`
-   older). Risk of editing the wrong one. Owner should confirm which is canonical and
-   whether the old draft can be archived.
-3. **No git repository.** Section 4's "start from a committed state" is currently
-   impossible — there is no version control at all, and `publications.js` content has
-   no backup. Recommend `git init` + first commit before any other change.
+1. ~~File naming~~ — RESOLVED 2026-07-16: files renamed to working names (see above).
+2. ~~Two homepage versions~~ — RESOLVED 2026-07-16: old draft moved to
+   `archive/old-homepage-draft.html`; `index.html` is canonical.
+3. ~~No git repository~~ — RESOLVED 2026-07-16: repo initialised and pushed to GitHub.
 4. **Contact form uses `action="mailto:..."` with `method="post"`.** This does not
    reliably send anything in modern browsers — at best it opens the visitor's mail app;
    with no mail app configured it silently does nothing. Enquiries may be being lost.
@@ -123,8 +116,8 @@ go-ahead, since it restructures the folder.
    the public page (the publishing desk escapes at authoring time). Fine while the only
    author is the owner; worth knowing if content ever comes from anywhere else.
 
-Owner has not yet confirmed this matches his understanding of what the site is meant to
-be. Until he does, treat the file-rename and old-draft questions as open.
+Owner approved the file renames and git setup on 2026-07-16 but has not yet explicitly
+confirmed the site description above matches his understanding.
 
 ## 3. Known landmines
 
@@ -177,8 +170,10 @@ possible state for this project.
 ## 5. Running locally
 
 ```
-python3 -m http.server 8000
+python -m http.server 8000
 ```
+
+(On this Windows machine the command is `python`; on Mac/Linux it may be `python3`.)
 
 Then open `http://localhost:8000/`. Use this for all testing, including `publish.html`.
 Update this section if the real setup turns out to be different.
