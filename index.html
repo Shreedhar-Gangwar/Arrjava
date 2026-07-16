@@ -611,9 +611,9 @@ const grid=document.getElementById('pubGrid'),
 pubs.forEach((p,i)=>{
   const card=document.createElement('article');
   card.className='pub-card reveal';
-  card.innerHTML=`<span class="sheen"></span><span class="cat">${p.category}</span><h3>${p.title}</h3><span class="date">${p.date}</span><p class="abs">${p.abstract}</p><span class="read-more">Read</span>`;
+  card.innerHTML=`<span class="sheen"></span><span class="cat">${p.category}</span><h3>${p.title}</h3><span class="date">${p.date}</span><p class="abs">${p.abstract}</p><a class="read-more" href="publications/${p.id}.html">Read</a>`;
   card.style.setProperty('--d',(i%3*.12)+'s');
-  card.addEventListener('click',()=>openReader(p));
+  card.addEventListener('click',()=>{location.href=`publications/${p.id}.html`});
   grid.appendChild(card);io.observe(card);
 });
 function openReader(p){
