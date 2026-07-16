@@ -1,0 +1,59 @@
+/* ============================================================
+   ARRJAVA — Publications data file
+   To publish a new piece: open publish.html, compose, and
+   download the regenerated publications.js. Replace this file
+   on your host. Newest entries first.
+   ============================================================ */
+window.ARRJAVA_PUBLICATIONS = [
+  {
+    id: "ti-order-39",
+    category: "Practice Note · Civil Procedure",
+    date: "June 2026",
+    title: "The Three Pillars of a Temporary Injunction: Order XXXIX Before the U.P. Civil Courts",
+    abstract: "Prima facie case, balance of convenience, and irreparable injury are recited in every application — and understood in few. A practitioner's note on pleading each pillar so the court can decide on a single reading.",
+    body: `
+      <p>Every application under Order XXXIX Rules 1 and 2 of the Code of Civil Procedure, 1908 recites the same trinity — a prima facie case, balance of convenience, and irreparable injury. The recital costs nothing; the demonstration is where applications succeed or fail.</p>
+      <h4>Prima facie case is not a prima facie title</h4>
+      <p>The applicant need not prove title at the interlocutory stage; the applicant must show a serious question to be tried and a credible foundation in the documents annexed. An application that argues the entire suit invites the court to pre-judge it — and courts decline that invitation by dismissing the application.</p>
+      <h4>Balance of convenience is comparative, not declaratory</h4>
+      <p>The question is not whether the applicant suffers if the injunction is refused, but who suffers more, and whose suffering can later be compensated in money. The application should state, in one disciplined paragraph, what each party stands to lose in each scenario.</p>
+      <h4>Irreparable injury must be pleaded as fact, not adjective</h4>
+      <p>"Grave and irreparable loss" is a conclusion. The pleading must supply the fact that makes the loss irreparable — that the property is the applicant's sole residence, that demolition cannot be undone, that possession once disturbed alters the subject matter of the suit itself.</p>
+      <p>The application that separates these three pillars, pleads each with facts, and closes with a precisely drawn prayer is the application that survives objection and earns the interim order.</p>
+      <p class="pub-disclaimer">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>
+    `
+  },
+  {
+    id: "msme-recovery",
+    category: "Advisory Note · Commercial",
+    date: "May 2026",
+    title: "Recovering Delayed Payments: The MSME Route Agra's Businesses Overlook",
+    abstract: "For registered micro and small enterprises, the MSMED Act, 2006 offers a recovery mechanism with compound interest and a statutory deposit condition on appeal — often faster than an ordinary suit for recovery.",
+    body: `
+      <p>Agra's manufacturing economy — footwear, leather goods, handicrafts — runs substantially on credit terms, and substantially on delayed payments. The Micro, Small and Medium Enterprises Development Act, 2006 gives registered suppliers a recovery route that ordinary civil suits cannot match.</p>
+      <h4>The statutory advantages</h4>
+      <p>Section 16 imposes compound interest, at three times the bank rate notified by the Reserve Bank, from the appointed day. Section 18 permits a reference to the Micro and Small Enterprises Facilitation Council, which proceeds through conciliation and, failing settlement, arbitration. Section 19 requires a buyer challenging the award to deposit seventy-five per cent of the awarded amount before the challenge is entertained — a condition that transforms settlement dynamics.</p>
+      <h4>The conditions precedent</h4>
+      <p>The supplier must hold a valid Udyam registration, and must have held it at the time of supply. The claim must arise from goods supplied or services rendered — the regime does not extend to every commercial grievance between the parties.</p>
+      <p>For an enterprise carrying receivables beyond the statutory period, the reference is frequently the most efficient remedy available — and the least used.</p>
+      <p class="pub-disclaimer">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>
+    `
+  },
+  {
+    id: "succession-probate",
+    category: "Client Guide · Succession",
+    date: "April 2026",
+    title: "Succession Certificate or Legal Heir Certificate: Which Document Does Your Family Actually Need?",
+    abstract: "Banks, insurers and revenue authorities ask for different documents after a death in the family — and families routinely apply for the wrong one. A plain-language guide to what each instrument does.",
+    body: `
+      <p>After a death in the family, institutions begin asking for documents — and the documents they ask for are not interchangeable. Applying for the wrong instrument costs months.</p>
+      <h4>The legal heir certificate</h4>
+      <p>Issued by the revenue authorities, it identifies the surviving heirs of the deceased. It is the working document for pensions, provident fund claims, mutation of property in revenue records, and compassionate appointments. It does not, by itself, entitle a holder to collect debts or securities.</p>
+      <h4>The succession certificate</h4>
+      <p>Granted by the civil court under the Indian Succession Act, 1925, it authorises the holder to collect the debts and securities of the deceased — bank deposits, shares, bonds. Banks and depositories insist on it for amounts of any significance, because it protects them in making payment.</p>
+      <h4>Where a will exists</h4>
+      <p>A will changes the analysis: the executor may require probate or letters of administration, depending on the assets and their location. A family that seeks advice before applying — rather than after the first rejection — ordinarily saves both time and expense.</p>
+      <p class="pub-disclaimer">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>
+    `
+  }
+];

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>ARRJAVA — Publishing Desk (Private)</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14181d;--paper:#f7f4ee;--gold:#b08d3e;--line:rgba(20,24,29,.15)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;font-weight:300;line-height:1.7;padding:60px 6vw 100px}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:500}
+.wrap{max-width:860px;margin:0 auto}
+h1{font-size:2.2rem;margin-bottom:6px}
+.sub{font-size:.7rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:40px}
+label{display:block;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:#555;margin:26px 0 8px}
+input,select,textarea{width:100%;background:#fff;border:1px solid var(--line);padding:14px 16px;font-family:'Cormorant Garamond',serif;font-size:1.1rem;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+textarea{min-height:300px;resize:vertical;line-height:1.8}
+.hint{font-size:.72rem;color:#777;margin-top:6px}
+.btn{display:inline-block;margin-top:34px;background:var(--ink);color:var(--paper);border:none;font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;padding:16px 36px;cursor:pointer;transition:background .3s}
+.btn:hover{background:var(--gold)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink);margin-left:14px}
+.steps{background:#fff;border:1px solid var(--line);border-top:3px solid var(--gold);padding:30px 34px;margin-bottom:44px;font-size:.85rem;color:#444}
+.steps b{display:block;font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:500;margin-bottom:10px;color:var(--ink)}
+.steps ol{margin-left:18px}
+.steps li{margin-bottom:6px}
+#existing{font-size:.8rem;color:#555;margin-top:10px}
+#preview{background:#fff;border:1px solid var(--line);padding:50px;margin-top:50px;display:none}
+#preview h2{font-size:1.8rem;margin:12px 0}
+#preview .cat{font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
+#preview .date{font-family:'Cormorant Garamond',serif;font-style:italic;color:#555;display:block;margin-bottom:24px}
+#preview h4{font-family:'Cormorant Garamond',serif;font-size:1.2rem;margin:26px 0 8px}
+#preview p{font-size:.92rem;color:#333;margin-bottom:14px}
+.ok{color:#2e6b2e;font-size:.85rem;margin-top:16px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Publishing Desk</h1>
+  <p class="sub">ARRJAVA · Private — do not upload this page's link anywhere public</p>
+
+  <div class="steps">
+    <b>How publishing works</b>
+    <ol>
+      <li>Compose the publication below. Write paragraphs normally; a blank line starts a new paragraph. Begin a line with <strong>##</strong> to make it a sub-heading.</li>
+      <li>Click <em>Preview</em> to see it exactly as readers will.</li>
+      <li>Click <em>Download publications.js</em> — the file will contain all existing publications plus this one, newest first.</li>
+      <li>Replace the <strong>publications.js</strong> file on your hosting with the downloaded file. The publication is live immediately.</li>
+    </ol>
+    <p id="existing"></p>
+  </div>
+
+  <label for="cat">Category</label>
+  <select id="cat">
+    <option>Practice Note · Civil Procedure</option>
+    <option>Advisory Note · Commercial</option>
+    <option>Client Guide · Succession</option>
+    <option>Client Guide · Family Law</option>
+    <option>Practice Note · Criminal Law</option>
+    <option>Commentary · Legal Developments</option>
+  </select>
+
+  <label for="title">Title</label>
+  <input id="title" placeholder="e.g. Limitation in Execution Proceedings: The Twelve-Year Myth">
+
+  <label for="date">Date line</label>
+  <input id="date" placeholder="e.g. July 2026">
+
+  <label for="abs">Abstract (2–3 sentences shown on the card)</label>
+  <textarea id="abs" style="min-height:110px"></textarea>
+
+  <label for="body">Body</label>
+  <textarea id="body" placeholder="Write the publication here. Blank line = new paragraph. Start a line with ## for a sub-heading."></textarea>
+  <p class="hint">A standard disclaimer ("This note is for general information only…") is appended automatically.</p>
+
+  <button class="btn" id="previewBtn" type="button">Preview</button>
+  <button class="btn ghost" id="downloadBtn" type="button">Download publications.js</button>
+  <p class="ok" id="okMsg">File downloaded. Replace publications.js on your host and the piece is live.</p>
+
+  <article id="preview"></article>
+</div>
+
+<script src="publications.js"></script>
+<script>
+const existing=window.ARRJAVA_PUBLICATIONS||[];
+document.getElementById('existing').textContent='Currently loaded: '+existing.length+' existing publication(s). They will be preserved in the downloaded file.';
+const DISCLAIMER='<p class="pub-disclaimer">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>';
+
+function bodyToHtml(t){
+  return t.split(/\n\s*\n/).map(b=>{
+    b=b.trim(); if(!b)return'';
+    if(b.startsWith('##'))return'<h4>'+esc(b.replace(/^#+\s*/,''))+'</h4>';
+    return'<p>'+esc(b).replace(/\n/g,'<br>')+'</p>';
+  }).join('\n      ')+'\n      '+DISCLAIMER;
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function collect(){
+  const title=document.getElementById('title').value.trim();
+  if(!title){alert('A title is required.');return null}
+  return{
+    id:title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60),
+    category:document.getElementById('cat').value,
+    date:document.getElementById('date').value.trim()||new Date().toLocaleString('en-IN',{month:'long',year:'numeric'}),
+    title:title,
+    abstract:document.getElementById('abs').value.trim(),
+    body:'\n      '+bodyToHtml(document.getElementById('body').value)+'\n    '
+  };
+}
+document.getElementById('previewBtn').onclick=()=>{
+  const p=collect();if(!p)return;
+  const pv=document.getElementById('preview');
+  pv.style.display='block';
+  pv.innerHTML='<span class="cat">'+p.category+'</span><h2>'+esc(p.title)+'</h2><span class="date">'+p.date+' · ARRJAVA, Agra</span>'+p.body;
+  pv.scrollIntoView({behavior:'smooth'});
+};
+document.getElementById('downloadBtn').onclick=()=>{
+  const p=collect();if(!p)return;
+  const all=[p,...existing.filter(e=>e.id!==p.id)];
+  const file='/* ARRJAVA — Publications data file (generated by publish.html on '+new Date().toLocaleDateString('en-IN')+') */\nwindow.ARRJAVA_PUBLICATIONS = '+JSON.stringify(all,null,2)+';\n';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([file],{type:'text/javascript'}));
+  a.download='publications.js';a.click();URL.revokeObjectURL(a.href);
+  document.getElementById('okMsg').style.display='block';
+};
+</script>
+</body>
+</html>
