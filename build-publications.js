@@ -12,6 +12,12 @@
 const fs = require('fs');
 const path = require('path');
 
+/* ---- Site address ----
+   Used for the sitemap, robots.txt and per-page canonical/share tags.
+   ⚠ UPDATE THIS ONE LINE AT DEPLOYMENT when the real domain exists
+   (e.g. 'https://arrjava.in'), then re-run: node build-publications.js */
+const SITE_URL = 'https://shreedhar-gangwar.github.io/Arrjava';
+
 /* ---- 1. Load the content database exactly as a browser would ---- */
 const src = fs.readFileSync(path.join(__dirname, 'publications.js'), 'utf8');
 const window = {};            // publications.js assigns onto `window`
@@ -30,6 +36,32 @@ const esc = s => String(s)
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Plain, single-line version of the abstract for the meta description.
 const metaText = s => esc(String(s).replace(/\s+/g, ' ').trim()).slice(0, 200);
+// Turn a human date line like "June 2026" into machine form "2026-06"
+// for search engines. Returns null if the format isn't recognised.
+const MONTHS = ['january','february','march','april','may','june','july',
+                'august','september','october','november','december'];
+const isoDate = s => {
+  const m = String(s).trim().toLowerCase().match(/^([a-z]+)\s+(\d{4})$/);
+  if (!m) return null;
+  const idx = MONTHS.indexOf(m[1]);
+  return idx === -1 ? null : m[2] + '-' + String(idx + 1).padStart(2, '0');
+};
+// The structured-data block search engines read to understand a page
+// is an article: headline, description, publisher, date.
+const jsonLd = p => {
+  const data = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: p.title,
+    description: String(p.abstract).replace(/\s+/g, ' ').trim(),
+    url: SITE_URL + '/publications/' + p.id + '.html',
+    author: { '@type': 'Organization', name: 'ARRJAVA — Advocates & Legal Consultants' },
+    publisher: { '@type': 'Organization', name: 'ARRJAVA — Advocates & Legal Consultants' }
+  };
+  const d = isoDate(p.date);
+  if (d) data.datePublished = d;
+  return JSON.stringify(data, null, 2);
+};
 
 /* ---- 3. The page template (design matches index.html) ---- */
 const page = p => `<!DOCTYPE html>
@@ -40,6 +72,15 @@ const page = p => `<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(p.title)} — ARRJAVA</title>
 <meta name="description" content="${metaText(p.abstract)}">
+<link rel="canonical" href="${SITE_URL}/publications/${p.id}.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${esc(p.title)}">
+<meta property="og:description" content="${metaText(p.abstract)}">
+<meta property="og:url" content="${SITE_URL}/publications/${p.id}.html">
+<meta property="og:site_name" content="ARRJAVA — Advocates &amp; Legal Consultants">
+<script type="application/ld+json">
+${jsonLd(p)}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -137,4 +178,24 @@ pubs.forEach(p => {
   fs.writeFileSync(file, page(p));
   console.log('  wrote publications/' + p.id + '.html');
 });
+
+/* ---- 5. Sitemap: tells search engines every page that exists ---- */
+const urls = [
+  SITE_URL + '/',
+  ...pubs.map(p => SITE_URL + '/publications/' + p.id + '.html')
+];
+const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+  urls.map(u => '  <url><loc>' + esc(u) + '</loc></url>').join('\n') +
+  '\n</urlset>\n';
+fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), sitemap);
+console.log('  wrote sitemap.xml (' + urls.length + ' pages)');
+
+/* ---- 6. robots.txt: points crawlers at the sitemap.
+   publish.html is not listed here on purpose — it already carries a
+   noindex tag, and robots.txt entries are public and would advertise it. */
+fs.writeFileSync(path.join(__dirname, 'robots.txt'),
+  'User-agent: *\nAllow: /\nSitemap: ' + SITE_URL + '/sitemap.xml\n');
+console.log('  wrote robots.txt');
+
 console.log('Built ' + pubs.length + ' publication page(s).');

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shreedhar-gangwar.github.io/Arrjava/sitemap.xml
