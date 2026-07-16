@@ -1,0 +1,9 @@
+{
+  "name": "arrjava-site",
+  "private": true,
+  "description": "ARRJAVA website build. Run `node build-publications.js` to regenerate the site from content/.",
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "marked": "^15.0.0"
+  }
+}

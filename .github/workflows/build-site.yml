@@ -1,0 +1,35 @@
+# Rebuilds the site automatically whenever publication content changes
+# (e.g. when Ravi saves a publication in the Pages CMS admin UI).
+# Runs build-publications.js and commits the regenerated output; the
+# hosting then redeploys on that commit. Nobody needs to run anything.
+name: Build site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/**'
+      - 'build-publications.js'
+      - 'package.json'
+  workflow_dispatch: {}   # allows a manual run from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: node build-publications.js
+      - name: Commit regenerated output
+        run: |
+          git config user.name "arrjava-site-builder"
+          git config user.email "builder@users.noreply.github.com"
+          git add publications.js publications/ sitemap.xml robots.txt
+          git diff --cached --quiet || git commit -m "Rebuild site from content change"
+          git push

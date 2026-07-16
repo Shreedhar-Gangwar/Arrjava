@@ -1,16 +1,26 @@
 /* ============================================================
-   ARRJAVA — Publication page generator
-   Reads publications.js (the content database — never modified
-   by this script) and writes one standalone HTML page per
-   publication into the publications/ folder.
+   ARRJAVA — Site builder
+   Reads the publication content files in content/publications/
+   (one .md file per publication — THE content database) and
+   generates everything the site serves:
+
+     publications.js        — data file the homepage reads
+     publications/<id>.html — one standalone page per publication
+     sitemap.xml            — list of all pages for search engines
+     robots.txt             — points crawlers at the sitemap
 
    Run it with:   node build-publications.js
-   Run it again whenever publications.js changes. Pages in
-   publications/ are OUTPUT — never edit them by hand; edits
-   would be overwritten on the next build.
+   (first time: npm install)
+
+   Everything this script writes is OUTPUT — never edit those
+   files by hand; the next build overwrites them. To change a
+   publication, edit its file in content/publications/ (or use
+   the Pages CMS admin UI) and re-run the build.
    ============================================================ */
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
+const { marked } = require('marked');
 
 /* ---- Site address ----
    Used for the sitemap, robots.txt and per-page canonical/share tags.
@@ -18,54 +28,73 @@ const path = require('path');
    (e.g. 'https://arrjava.in'), then re-run: node build-publications.js */
 const SITE_URL = 'https://shreedhar-gangwar.github.io/Arrjava';
 
-/* ---- 1. Load the content database exactly as a browser would ---- */
-const src = fs.readFileSync(path.join(__dirname, 'publications.js'), 'utf8');
-const window = {};            // publications.js assigns onto `window`
-eval(src);                    // safe: our own local file, same code the site runs
-const pubs = window.ARRJAVA_PUBLICATIONS || [];
-if (!pubs.length) {
-  console.error('ERROR: no publications found in publications.js — refusing to build.');
+/* The legal disclaimer appended to every publication. Owner's domain —
+   do not edit this text (see CLAUDE.md section 6). */
+const DISCLAIMER = '<p class="pub-disclaimer">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>';
+
+/* ---- 1. Read the content files ---- */
+const contentDir = path.join(__dirname, 'content', 'publications');
+const files = fs.readdirSync(contentDir).filter(f => f.endsWith('.md'));
+if (!files.length) {
+  console.error('ERROR: no content files found in content/publications/ — refusing to build.');
   process.exit(1);
 }
 
+const MONTHS = ['January','February','March','April','May','June','July',
+                'August','September','October','November','December'];
+
+const pubs = files.map(f => {
+  const raw = fs.readFileSync(path.join(contentDir, f), 'utf8');
+  // Split "--- frontmatter --- body"
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+  if (!m) { console.error('ERROR: ' + f + ' has no valid front matter.'); process.exit(1); }
+  const meta = yaml.load(m[1]);
+  for (const need of ['title', 'category', 'date', 'abstract']) {
+    if (!meta[need]) { console.error('ERROR: ' + f + ' is missing "' + need + '".'); process.exit(1); }
+  }
+  // js-yaml gives a Date for unquoted YYYY-MM-DD; accept a string too.
+  const d = meta.date instanceof Date ? meta.date : new Date(String(meta.date));
+  if (isNaN(d)) { console.error('ERROR: ' + f + ' has an unreadable date.'); process.exit(1); }
+  return {
+    id: f.replace(/\.md$/, ''),
+    category: String(meta.category),
+    date: MONTHS[d.getUTCMonth()] + ' ' + d.getUTCFullYear(),  // shown as e.g. "June 2026"
+    sortDate: d,
+    title: String(meta.title),
+    abstract: String(meta.abstract),
+    // marked encodes apostrophes as &#39;; keep them literal so the
+    // stored text stays clean and matches the original writing.
+    body: marked.parse(m[2].trim()).trim().replace(/&#39;/g, "'") + '\n' + DISCLAIMER
+  };
+});
+
+// Newest first, matching how the homepage has always listed them.
+pubs.sort((a, b) => b.sortDate - a.sortDate);
+
 /* ---- 2. Helpers ---- */
 // Escape text that goes inside HTML (titles, abstracts). Bodies are
-// already trusted HTML written via the publishing flow, inserted as-is.
+// the owner's own trusted writing, inserted as-is.
 const esc = s => String(s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;')
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Plain, single-line version of the abstract for the meta description.
 const metaText = s => esc(String(s).replace(/\s+/g, ' ').trim()).slice(0, 200);
-// Turn a human date line like "June 2026" into machine form "2026-06"
-// for search engines. Returns null if the format isn't recognised.
-const MONTHS = ['january','february','march','april','may','june','july',
-                'august','september','october','november','december'];
-const isoDate = s => {
-  const m = String(s).trim().toLowerCase().match(/^([a-z]+)\s+(\d{4})$/);
-  if (!m) return null;
-  const idx = MONTHS.indexOf(m[1]);
-  return idx === -1 ? null : m[2] + '-' + String(idx + 1).padStart(2, '0');
-};
 // The structured-data block search engines read to understand a page
 // is an article: headline, description, publisher, date.
-const jsonLd = p => {
-  const data = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: p.title,
-    description: String(p.abstract).replace(/\s+/g, ' ').trim(),
-    url: SITE_URL + '/publications/' + p.id + '.html',
-    author: { '@type': 'Organization', name: 'ARRJAVA — Advocates & Legal Consultants' },
-    publisher: { '@type': 'Organization', name: 'ARRJAVA — Advocates & Legal Consultants' }
-  };
-  const d = isoDate(p.date);
-  if (d) data.datePublished = d;
-  return JSON.stringify(data, null, 2);
-};
+const jsonLd = p => JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: p.title,
+  description: String(p.abstract).replace(/\s+/g, ' ').trim(),
+  url: SITE_URL + '/publications/' + p.id + '.html',
+  datePublished: p.sortDate.toISOString().slice(0, 10),
+  author: { '@type': 'Organization', name: 'ARRJAVA — Advocates & Legal Consultants' },
+  publisher: { '@type': 'Organization', name: 'ARRJAVA — Advocates & Legal Consultants' }
+}, null, 2);
 
 /* ---- 3. The page template (design matches index.html) ---- */
 const page = p => `<!DOCTYPE html>
-<!-- GENERATED FILE — do not edit. Built by build-publications.js from publications.js -->
+<!-- GENERATED FILE — do not edit. Built by build-publications.js from content/publications/${p.id}.md -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -116,8 +145,11 @@ main{max-width:760px;margin:0 auto;padding:70px 6vw 90px}
 h1{font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.2;margin:18px 0 10px}
 .date{font-family:var(--serif);font-style:italic;color:var(--ink-soft);margin-bottom:38px;display:block}
 article{-webkit-user-select:none;-moz-user-select:none;user-select:none}
-article h4{font-family:var(--serif);font-size:1.25rem;margin:34px 0 10px;color:var(--ink)}
+article h1,article h2,article h3,article h4,article h5,article h6{font-family:var(--serif);font-size:1.25rem;font-weight:500;margin:34px 0 10px;color:var(--ink)}
 article p{font-size:.95rem;color:var(--ink-soft);margin-bottom:16px}
+article strong{font-weight:500;color:var(--ink)}
+article a{border-bottom:1px solid var(--gold)}
+article ul,article ol{margin:0 0 16px 22px;font-size:.95rem;color:var(--ink-soft)}
 article .pub-disclaimer{font-size:.7rem;border-top:1px solid var(--line);padding-top:18px;margin-top:36px;font-style:italic}
 .all-link{display:inline-block;margin-top:44px;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink)}
 .all-link::before{content:"⟵";color:var(--gold);margin-right:12px}
@@ -150,7 +182,7 @@ footer .disclaimer{max-width:70ch}
   <h1>${esc(p.title)}</h1>
   <span class="date">${esc(p.date)} · ARRJAVA, Agra</span>
   <article>
-    ${p.body.trim()}
+    ${p.body}
   </article>
   <a class="all-link" href="../index.html#publications">All publications</a>
 </main>
@@ -170,32 +202,45 @@ const doc=document.querySelector('article');
 </html>
 `;
 
-/* ---- 4. Write one page per publication ---- */
+/* ---- 4. Write publications.js (the data file the homepage reads) ---- */
+const dataOut = pubs.map(({ id, category, date, title, abstract, body }) =>
+  ({ id, category, date, title, abstract, body }));
+fs.writeFileSync(path.join(__dirname, 'publications.js'),
+  '/* GENERATED FILE — do not edit. Built by build-publications.js from content/publications/ */\n' +
+  'window.ARRJAVA_PUBLICATIONS = ' + JSON.stringify(dataOut, null, 2) + ';\n');
+console.log('  wrote publications.js (' + pubs.length + ' publications)');
+
+/* ---- 5. Write one page per publication; remove pages whose
+        content file no longer exists (deleted publications) ---- */
 const outDir = path.join(__dirname, 'publications');
 fs.mkdirSync(outDir, { recursive: true });
+const wanted = new Set(pubs.map(p => p.id + '.html'));
+fs.readdirSync(outDir).filter(f => f.endsWith('.html') && !wanted.has(f)).forEach(f => {
+  fs.unlinkSync(path.join(outDir, f));
+  console.log('  removed stale publications/' + f);
+});
 pubs.forEach(p => {
-  const file = path.join(outDir, p.id + '.html');
-  fs.writeFileSync(file, page(p));
+  fs.writeFileSync(path.join(outDir, p.id + '.html'), page(p));
   console.log('  wrote publications/' + p.id + '.html');
 });
 
-/* ---- 5. Sitemap: tells search engines every page that exists ---- */
+/* ---- 6. Sitemap: tells search engines every page that exists ---- */
 const urls = [
   SITE_URL + '/',
   ...pubs.map(p => SITE_URL + '/publications/' + p.id + '.html')
 ];
-const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+fs.writeFileSync(path.join(__dirname, 'sitemap.xml'),
+  '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
   urls.map(u => '  <url><loc>' + esc(u) + '</loc></url>').join('\n') +
-  '\n</urlset>\n';
-fs.writeFileSync(path.join(__dirname, 'sitemap.xml'), sitemap);
+  '\n</urlset>\n');
 console.log('  wrote sitemap.xml (' + urls.length + ' pages)');
 
-/* ---- 6. robots.txt: points crawlers at the sitemap.
+/* ---- 7. robots.txt: points crawlers at the sitemap.
    publish.html is not listed here on purpose — it already carries a
    noindex tag, and robots.txt entries are public and would advertise it. */
 fs.writeFileSync(path.join(__dirname, 'robots.txt'),
   'User-agent: *\nAllow: /\nSitemap: ' + SITE_URL + '/sitemap.xml\n');
 console.log('  wrote robots.txt');
 
-console.log('Built ' + pubs.length + ' publication page(s).');
+console.log('Built ' + pubs.length + ' publication(s).');

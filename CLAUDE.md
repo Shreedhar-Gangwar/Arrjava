@@ -46,10 +46,24 @@ commits in this repo.
   regenerated `publications.js` containing all existing publications plus the new one,
   newest first. Entries with the same title-derived `id` replace the older entry
   rather than duplicating it.
-- `publications.js` — THE CONTENT DATABASE (see landmines). Defines
-  `window.ARRJAVA_PUBLICATIONS`, an array of publication objects
-  (`id`, `category`, `date`, `title`, `abstract`, `body` as HTML). Currently holds
-  3 publications dated April–June 2026. Irreplaceable content.
+- `content/publications/*.md` — THE CONTENT DATABASE since 2026-07-16 (see landmines).
+  One file per publication: YAML front matter (`title`, `category`, `date`,
+  `abstract`) + markdown body. Edited via the Pages CMS admin UI or by hand.
+  The legal disclaimer is NOT in these files — the build appends it.
+- `publications.js` — GENERATED since 2026-07-16 (was previously the hand-kept
+  database). Built from `content/publications/` by `build-publications.js`, same
+  shape as always: `window.ARRJAVA_PUBLICATIONS`, array of `id`, `category`, `date`,
+  `title`, `abstract`, `body`-as-HTML. Never hand-edit. The original hand-written
+  version survives in git history (commits before "Publications become…", 2026-07-16).
+- `.pages.yml` — Pages CMS configuration: defines the publishing form editors see
+  at pagescms.org (fields, category dropdown, rich-text body). Collaborators cannot
+  see or modify it.
+- `.github/workflows/build-site.yml` — GitHub Action: rebuilds the site (runs
+  `build-publications.js` and commits output) whenever anything in `content/`
+  changes, e.g. when Ravi saves in the CMS.
+- `package.json` / `package-lock.json` — Node dependencies for the build
+  (`js-yaml`, `marked`). `npm install` once before building locally.
+- `media/` — upload target for future images via the CMS (empty placeholder).
 - `logo.svg` — an SVG logo/wordmark (mark + "ARRJAVA" text, 420×140). Not referenced
   by any page — the pages draw their own inline SVG marks. Purpose unclear; probably
   for letterhead/social use. Do not delete without asking.
@@ -89,8 +103,17 @@ From the repo root (on this Windows machine the command is `python`, not `python
 python -m http.server 8000
 ```
 
-then open `http://localhost:8000/`. Verified working 2026-07-16: all four files serve
+then open `http://localhost:8000/`. Verified working 2026-07-16: all pages serve
 with HTTP 200 and the publications section shows all 3 pieces.
+
+After changing anything in `content/publications/`, rebuild first
+(`npm install` once, then):
+
+```
+node build-publications.js
+```
+
+(In production the GitHub Action does this automatically on push.)
 
 ### Conventions actually observed
 
@@ -139,20 +162,28 @@ confirmed the site description above matches his understanding.
 
 ## 3. Known landmines
 
-Recorded before the code was read closely. Verify each and correct this list.
+Originally recorded before the code was read closely; revised 2026-07-16 after the
+publications system was rebuilt (owner-approved).
 
-**`publications.js` is the content database.**
-It appears to hold every published piece as data, and `publish.html` regenerates the
-whole file from scratch on download. Treat it as irreplaceable content, not as code.
-Never regenerate, reformat, or "clean up" this file. Never let a refactor touch its
-shape. If a change would alter its structure, stop and raise it first.
+**`content/publications/*.md` is the content database now.**
+One markdown file per publication — irreplaceable owner content, not code. Never
+regenerate, reformat, or bulk-edit these files. `publications.js` is the opposite of
+what it was: it is now GENERATED output of `build-publications.js` and must never be
+hand-edited (the pre-migration hand-written version is preserved in git history).
+The migration was verified word-for-word on 2026-07-16.
 
-**`publish.html` loads `publications.js` with a `<script src>` tag.**
-Opened over `file://`, browsers block this and the page silently reads zero existing
-publications. If the owner then clicks download, the new file contains only the newest
-piece and every earlier publication is lost. Always test through a local server, never
-by double-clicking the file. Confirm the on-page count of existing publications is
-correct before any download is attempted.
+**The build appends the legal disclaimer to every publication body.**
+The disclaimer text lives in `build-publications.js` (`DISCLAIMER` constant). Per
+section 6, never alter that text. Content files must not contain it — the build would
+not deduplicate a hand-typed copy.
+
+**`publish.html` is LEGACY as of 2026-07-16.**
+Superseded by the Pages CMS admin flow. Its download-regenerates-the-file mechanism
+now conflicts with the generated `publications.js` — using it and uploading its output
+would be overwritten by the next build (content would survive in git, but the
+publication made that way would vanish). Retirement is pending an explicit owner
+decision; until then it stays unlinked and noindexed. Do not "fix" it to match the
+new system.
 
 **CSS is inlined in `<style>` blocks, seemingly duplicated across pages.**
 A design change likely means editing several files identically. Extracting a shared

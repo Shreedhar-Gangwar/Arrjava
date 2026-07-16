@@ -1,0 +1,52 @@
+# ============================================================
+# Pages CMS configuration — defines the publishing UI that
+# editors (Ravi) see after logging in at pagescms.org.
+# Editors invited as collaborators can edit content only; they
+# cannot see or change this file.
+# ============================================================
+media:
+  input: media
+  output: media
+
+content:
+  - name: publications
+    label: Publications
+    type: collection
+    path: content/publications
+    format: yaml-frontmatter
+    filename: '{title}.md'
+    view:
+      fields: [title, category, date]
+      sort: [date]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values:
+            - Practice Note · Civil Procedure
+            - Advisory Note · Commercial
+            - Client Guide · Succession
+            - Client Guide · Family Law
+            - Practice Note · Criminal Law
+            - Commentary · Legal Developments
+      - name: date
+        label: Publication date
+        type: date
+        required: true
+      - name: abstract
+        label: Abstract — 2–3 sentences shown on the publication card
+        type: text
+        required: true
+      - name: body
+        label: Body — the standard legal disclaimer is added automatically, do not type it
+        type: rich-text
+        required: true
