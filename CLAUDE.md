@@ -103,10 +103,11 @@ with HTTP 200 and the publications section shows all 3 pieces.
 2. ~~Two homepage versions~~ — RESOLVED 2026-07-16: old draft moved to
    `archive/old-homepage-draft.html`; `index.html` is canonical.
 3. ~~No git repository~~ — RESOLVED 2026-07-16: repo initialised and pushed to GitHub.
-4. **Contact form uses `action="mailto:..."` with `method="post"`.** This does not
-   reliably send anything in modern browsers — at best it opens the visitor's mail app;
-   with no mail app configured it silently does nothing. Enquiries may be being lost.
-   A real fix needs a form backend; raise with the owner before touching it.
+4. ~~Contact form used an unreliable `mailto:` action~~ — RESOLVED 2026-07-16: form now
+   posts to FormSubmit (`formsubmit.co/rpsrivastadv05@gmail.com`), activated from the
+   firm inbox and verified by a test enquiry arriving. OPEN FOLLOW-UP for deployment:
+   add a `_next` hidden field with the live site's URL so visitors return to the site
+   after submitting, instead of FormSubmit's generic thank-you page.
 5. **Regenerated `publications.js` will look different from the current one.** The
    current file is hand-formatted with template-literal bodies; the publishing desk
    generates JSON formatting instead. Functionally compatible (same array, same fields),
