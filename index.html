@@ -186,12 +186,22 @@ footer .fbrand{font-family:var(--serif);letter-spacing:.32em;color:var(--paper);
 footer .disclaimer{max-width:60ch;font-size:.7rem;line-height:1.8}
 footer .fine{width:100%;border-top:1px solid rgba(247,244,238,.12);margin-top:36px;padding-top:20px;font-size:.65rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
-/* ---------- Publications ---------- */
+/* ---------- Publications (horizontal strip) ---------- */
 #publications{background:var(--paper-deep);perspective:1200px}
-.pub-grid{margin-top:60px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
-@media(max-width:960px){.pub-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.pub-grid{grid-template-columns:1fr}}
-.pub-card{background:var(--paper);border:1px solid var(--line);padding:40px 34px;display:flex;flex-direction:column;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .18s ease-out,box-shadow .4s;will-change:transform}
+.pub-controls{display:flex;justify-content:flex-end;gap:10px;margin:44px 0 20px}
+.pub-controls.hidden{display:none}
+.pub-nav{background:transparent;border:1px solid var(--ink);width:46px;height:46px;font-size:1rem;color:var(--ink);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center}
+.pub-nav:hover{background:var(--ink);color:var(--paper)}
+.pub-strip{position:relative}
+.pub-grid{display:flex;gap:28px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:26px;scrollbar-width:none;-ms-overflow-style:none}
+.pub-grid::-webkit-scrollbar{display:none}
+/* edge fades — cards dissolve at the sides where more content waits */
+.pub-strip.fade-r .pub-grid{-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent)}
+.pub-strip.fade-l .pub-grid{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%);mask-image:linear-gradient(90deg,transparent,#000 14%)}
+.pub-strip.fade-l.fade-r .pub-grid{-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
+.pub-card{flex:0 0 calc((100% - 56px)/3);scroll-snap-align:start;background:var(--paper);border:1px solid var(--line);padding:40px 34px;display:flex;flex-direction:column;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .18s ease-out,box-shadow .4s;will-change:transform}
+@media(max-width:960px){.pub-card{flex-basis:calc((100% - 28px)/2)}}
+@media(max-width:640px){.pub-card{flex-basis:86%}}
 .pub-card:hover{box-shadow:0 26px 60px -24px rgba(20,24,29,.35)}
 .pub-card .sheen{position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(176,141,62,.12),transparent 60%);opacity:0;transition:opacity .4s;pointer-events:none}
 .pub-card:hover .sheen{opacity:1}
@@ -529,7 +539,13 @@ h2.reveal.visible::after{transform:scaleX(1)}
     <p class="kicker reveal">Publications</p>
     <h2 class="reveal">Thought, in writing.</h2>
     <p class="section-intro reveal">Practice notes, advisory notes and client guides authored by the chambers. Publications are provided in a read-only format for on-screen reading.</p>
-    <div class="pub-grid" id="pubGrid"></div>
+    <div class="pub-controls hidden" id="pubControls">
+      <button class="pub-nav" id="pubPrev" aria-label="Scroll publications left">⟵</button>
+      <button class="pub-nav" id="pubNext" aria-label="Scroll publications right">⟶</button>
+    </div>
+    <div class="pub-strip" id="pubStrip">
+      <div class="pub-grid" id="pubGrid"></div>
+    </div>
   </div>
 </section>
 
@@ -634,6 +650,22 @@ pubs.forEach((p,i)=>{
   card.addEventListener('click',()=>{location.href=`publications/${p.id}.html`});
   grid.appendChild(card);io.observe(card);
 });
+
+/* Horizontal strip: edge fades + arrows (only shown when there is overflow) */
+const pubStrip=document.getElementById('pubStrip'),
+      pubControls=document.getElementById('pubControls');
+function pubFades(){
+  const overflow=grid.scrollWidth-grid.clientWidth>20;
+  pubControls.classList.toggle('hidden',!overflow);
+  pubStrip.classList.toggle('fade-l',overflow&&grid.scrollLeft>20);
+  pubStrip.classList.toggle('fade-r',overflow&&grid.scrollLeft<grid.scrollWidth-grid.clientWidth-20);
+}
+grid.addEventListener('scroll',pubFades,{passive:true});
+addEventListener('resize',pubFades);
+pubFades();
+const pubStep=()=>grid.firstElementChild?grid.firstElementChild.getBoundingClientRect().width+28:300;
+document.getElementById('pubPrev').addEventListener('click',()=>grid.scrollBy({left:-pubStep(),behavior:'smooth'}));
+document.getElementById('pubNext').addEventListener('click',()=>grid.scrollBy({left:pubStep(),behavior:'smooth'}));
 function openReader(p){
   readerDoc.innerHTML=`<span class="cat">${p.category}</span><h2>${p.title}</h2><span class="date">${p.date} · ARRJAVA, Agra</span>${p.body}`;
   reader.classList.add('open');document.body.classList.add('reader-open');reader.scrollTop=0;
