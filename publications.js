@@ -46,6 +46,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>do not buy digital media just pirate it.</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "is-it-fine-to-usurp-the-inheritance-like-the-kings-did",
+    "category": "Client Guide · Succession",
+    "color": "#ABEB9D",
+    "date": "July 2026",
+    "title": "is it fine to usurp the inheritance like the kings did",
+    "abstract": "yes if people and police refer to you as my king/queen",
+    "body": "<p>please get help</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "is-witnees-to-a-crime-also-a-crime",
     "category": "Practice Note · Criminal Law",
     "color": "#9C7F52",
