@@ -19,6 +19,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>Just for reference the moves mentioned are illegal</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "how-to-handle-the-law-of-family",
+    "category": "Client Guide · Family Law",
+    "color": "#283e2a",
+    "date": "July 2026",
+    "title": "How to handle the law of family",
+    "abstract": "Read the family constitution",
+    "body": "<p>We the people of xyz household solemnly swear to abide by xyz constitution</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "is-anime-piracy-crime",
     "category": "Advisory Note · Commercial",
     "color": "#C73828",
