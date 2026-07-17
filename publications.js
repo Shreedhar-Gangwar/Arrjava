@@ -55,6 +55,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>legaloroty</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "should-court-have-the-final-say-in-your-case",
+    "category": "Commentary · Legal Developments",
+    "color": "#c596c5",
+    "date": "July 2026",
+    "title": "Should court have the final say in your case",
+    "abstract": "Yes thats the court why are you even reading this",
+    "body": "<p>get help</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "should-there-be-equal-partition-of-family-car",
     "category": "Client Guide · Family Law",
     "color": "#283e2a",
