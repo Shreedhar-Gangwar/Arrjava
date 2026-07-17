@@ -687,7 +687,12 @@ function pubFades(){
 grid.addEventListener('scroll',pubFades,{passive:true});
 addEventListener('resize',pubFades);
 pubFades();
-const pubStep=()=>grid.firstElementChild?grid.firstElementChild.getBoundingClientRect().width+28:300;
+// Scroll by a full "page" of cards — however many are currently visible
+// (3 on laptop, 2 on tablet, 1 on phone), read from the real card width.
+const pubGap=28;
+function pubUnit(){const c=grid.firstElementChild;return c?c.getBoundingClientRect().width+pubGap:300}
+function pubVisible(){return Math.max(1,Math.round(grid.clientWidth/pubUnit()))}
+function pubStep(){return pubVisible()*pubUnit()}
 document.getElementById('pubPrev').addEventListener('click',()=>grid.scrollBy({left:-pubStep(),behavior:'smooth'}));
 document.getElementById('pubNext').addEventListener('click',()=>grid.scrollBy({left:pubStep(),behavior:'smooth'}));
 function openReader(p){
