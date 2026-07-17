@@ -170,7 +170,9 @@ h2{font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.15;max-width:22ch}
 @media(max-width:860px){#contact .contact-grid{grid-template-columns:1fr}}
 .c-block{border-top:1px solid var(--line);padding-top:26px;margin-bottom:34px}
 .c-block b{display:block;font-size:.64rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:12px}
-.c-block p,.c-block a{font-family:var(--serif);font-size:1.35rem;line-height:1.4}
+/* Contact values in the sans font — far clearer for email & phone than
+   the serif, while staying in the site's existing type system */
+.c-block p,.c-block a{font-family:var(--sans);font-size:1.08rem;font-weight:400;letter-spacing:.01em;line-height:1.55}
 .c-block a:hover{color:var(--gold)}
 form .field{margin-bottom:26px}
 form label{display:block;font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
