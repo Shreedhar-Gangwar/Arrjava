@@ -40,10 +40,11 @@ main{max-width:1180px;margin:0 auto;padding:64px 6vw 90px}
 h1{font-size:clamp(2rem,4.4vw,3rem);line-height:1.12}
 .intro{margin-top:18px;max-width:60ch;color:var(--ink-soft)}
 
-.catnav{display:flex;flex-wrap:wrap;gap:10px 14px;margin:40px 0 8px;padding-bottom:34px;border-bottom:1px solid var(--line)}
-.catnav a{display:flex;align-items:center;gap:9px;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);padding:9px 14px;transition:border-color .3s,color .3s}
-.catnav a:hover{color:var(--ink);border-color:var(--gold)}
-.catnav .dot{width:11px;height:11px;border-radius:3px;flex:none}
+.filters{display:flex;flex-wrap:wrap;gap:10px 12px;margin:40px 0 8px;padding-bottom:34px;border-bottom:1px solid var(--line)}
+.filt{display:flex;align-items:center;gap:9px;font-family:inherit;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);background:transparent;border:1px solid var(--line);padding:9px 15px;cursor:pointer;transition:border-color .3s,color .3s,background .3s}
+.filt:hover{color:var(--ink);border-color:var(--gold)}
+.filt.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filt .dot{width:11px;height:11px;border-radius:3px;flex:none}
 
 .catsec{margin-top:64px;scroll-margin-top:24px}
 .catsec h2{display:flex;align-items:center;gap:14px;font-size:1.5rem}
@@ -89,13 +90,14 @@ footer .disclaimer{max-width:70ch}
   <h1>The library, by area of law.</h1>
   <p class="intro">Every practice note, advisory note and client guide authored by the chambers, grouped by area of law. Publications are provided in a read-only format for on-screen reading.</p>
 
-  <nav class="catnav" aria-label="Jump to a category">
-    <a href="#practice-note-civil-procedure"><span class="dot" style="background:#6b231d"></span>Civil Procedure</a>
-    <a href="#advisory-note-commercial"><span class="dot" style="background:#C73828"></span>Commercial Law</a>
-    <a href="#client-guide-succession"><span class="dot" style="background:#ABEB9D"></span>Succession Law</a>
-    <a href="#client-guide-family-law"><span class="dot" style="background:#283e2a"></span>Family Law</a>
-    <a href="#practice-note-criminal-law"><span class="dot" style="background:#9C7F52"></span>Criminal Law</a>
-    <a href="#commentary-legal-developments"><span class="dot" style="background:#c596c5"></span>Legal Developments</a>
+  <nav class="filters" aria-label="Filter by category">
+    <button class="filt on" type="button" data-cat="all" aria-pressed="true">All</button>
+    <button class="filt" type="button" data-cat="practice-note-civil-procedure" aria-pressed="false"><span class="dot" style="background:#6b231d"></span>Civil Procedure</button>
+    <button class="filt" type="button" data-cat="advisory-note-commercial" aria-pressed="false"><span class="dot" style="background:#C73828"></span>Commercial Law</button>
+    <button class="filt" type="button" data-cat="client-guide-succession" aria-pressed="false"><span class="dot" style="background:#ABEB9D"></span>Succession Law</button>
+    <button class="filt" type="button" data-cat="client-guide-family-law" aria-pressed="false"><span class="dot" style="background:#283e2a"></span>Family Law</button>
+    <button class="filt" type="button" data-cat="practice-note-criminal-law" aria-pressed="false"><span class="dot" style="background:#9C7F52"></span>Criminal Law</button>
+    <button class="filt" type="button" data-cat="commentary-legal-developments" aria-pressed="false"><span class="dot" style="background:#c596c5"></span>Legal Developments</button>
   </nav>
 
   <section class="catsec" id="practice-note-civil-procedure">
@@ -236,5 +238,19 @@ footer .disclaimer{max-width:70ch}
   <p class="disclaimer">This website is for informational purposes only and does not constitute solicitation, advertisement, or legal advice. In conformity with the rules of the Bar Council of India, ARRJAVA does not solicit work. Content is provided solely at the visitor's specific request. Nothing herein creates an advocate–client relationship.</p>
 </footer>
 
+<script>
+/* Category filter tabs. Without JS, every section shows (graceful). */
+(function(){
+  var filts=[].slice.call(document.querySelectorAll('.filt'));
+  var secs=[].slice.call(document.querySelectorAll('.catsec'));
+  filts.forEach(function(b){
+    b.addEventListener('click',function(){
+      filts.forEach(function(x){var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
+      var cat=b.getAttribute('data-cat');
+      secs.forEach(function(s){s.style.display=(cat==='all'||s.id===cat)?'':'none';});
+    });
+  });
+})();
+</script>
 </body>
 </html>

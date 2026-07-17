@@ -283,10 +283,11 @@ main{max-width:1180px;margin:0 auto;padding:64px 6vw 90px}
 h1{font-size:clamp(2rem,4.4vw,3rem);line-height:1.12}
 .intro{margin-top:18px;max-width:60ch;color:var(--ink-soft)}
 
-.catnav{display:flex;flex-wrap:wrap;gap:10px 14px;margin:40px 0 8px;padding-bottom:34px;border-bottom:1px solid var(--line)}
-.catnav a{display:flex;align-items:center;gap:9px;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);padding:9px 14px;transition:border-color .3s,color .3s}
-.catnav a:hover{color:var(--ink);border-color:var(--gold)}
-.catnav .dot{width:11px;height:11px;border-radius:3px;flex:none}
+.filters{display:flex;flex-wrap:wrap;gap:10px 12px;margin:40px 0 8px;padding-bottom:34px;border-bottom:1px solid var(--line)}
+.filt{display:flex;align-items:center;gap:9px;font-family:inherit;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);background:transparent;border:1px solid var(--line);padding:9px 15px;cursor:pointer;transition:border-color .3s,color .3s,background .3s}
+.filt:hover{color:var(--ink);border-color:var(--gold)}
+.filt.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filt .dot{width:11px;height:11px;border-radius:3px;flex:none}
 
 .catsec{margin-top:64px;scroll-margin-top:24px}
 .catsec h2{display:flex;align-items:center;gap:14px;font-size:1.5rem}
@@ -332,8 +333,9 @@ footer .disclaimer{max-width:70ch}
   <h1>The library, by area of law.</h1>
   <p class="intro">Every practice note, advisory note and client guide authored by the chambers, grouped by area of law. Publications are provided in a read-only format for on-screen reading.</p>
 
-  <nav class="catnav" aria-label="Jump to a category">
-    ${groups.map(g => `<a href="#${slug(g.category)}"><span class="dot" style="background:${g.color}"></span>${esc(catLabel(g.category))}</a>`).join('\n    ')}
+  <nav class="filters" aria-label="Filter by category">
+    <button class="filt on" type="button" data-cat="all" aria-pressed="true">All</button>
+    ${groups.map(g => `<button class="filt" type="button" data-cat="${slug(g.category)}" aria-pressed="false"><span class="dot" style="background:${g.color}"></span>${esc(catLabel(g.category))}</button>`).join('\n    ')}
   </nav>
 
   ${groups.map(g => `<section class="catsec" id="${slug(g.category)}">
@@ -354,6 +356,20 @@ footer .disclaimer{max-width:70ch}
   <p class="disclaimer">This website is for informational purposes only and does not constitute solicitation, advertisement, or legal advice. In conformity with the rules of the Bar Council of India, ARRJAVA does not solicit work. Content is provided solely at the visitor's specific request. Nothing herein creates an advocate–client relationship.</p>
 </footer>
 
+<script>
+/* Category filter tabs. Without JS, every section shows (graceful). */
+(function(){
+  var filts=[].slice.call(document.querySelectorAll('.filt'));
+  var secs=[].slice.call(document.querySelectorAll('.catsec'));
+  filts.forEach(function(b){
+    b.addEventListener('click',function(){
+      filts.forEach(function(x){var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
+      var cat=b.getAttribute('data-cat');
+      secs.forEach(function(s){s.style.display=(cat==='all'||s.id===cat)?'':'none';});
+    });
+  });
+})();
+</script>
 </body>
 </html>
 `;
