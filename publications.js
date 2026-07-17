@@ -3,7 +3,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "crime",
     "category": "Practice Note · Criminal Law",
-    "color": "#8a3d3d",
+    "color": "#9C7F52",
     "date": "July 2026",
     "title": "crime",
     "abstract": "crimeria",
@@ -12,7 +12,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "legal",
     "category": "Commentary · Legal Developments",
-    "color": "#6a5a86",
+    "color": "#c596c5",
     "date": "July 2026",
     "title": "legal",
     "abstract": "legalia",
@@ -21,7 +21,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "typ",
     "category": "Client Guide · Family Law",
-    "color": "#b06a4f",
+    "color": "#283e2a",
     "date": "July 2026",
     "title": "typ",
     "abstract": "ghj",
