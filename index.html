@@ -215,6 +215,7 @@ footer .fine{width:100%;border-top:1px solid rgba(247,244,238,.12);margin-top:36
 .pub-legend.on{display:flex}
 .pub-legend .lg{display:flex;align-items:center;gap:9px;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .pub-legend .sw{width:13px;height:13px;border-radius:3px;flex:none}
+.pub-all{margin-top:40px;text-align:center}
 .pub-card .date{font-family:var(--serif);font-style:italic;font-size:.85rem;color:var(--ink-soft)}
 .pub-card p.abs{font-size:.85rem;color:var(--ink-soft);margin-top:14px;flex:1}
 .pub-card .read-more{margin-top:26px;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);display:flex;align-items:center;gap:12px}
@@ -555,6 +556,7 @@ h2.reveal.visible::after{transform:scaleX(1)}
     <div class="pub-strip" id="pubStrip">
       <div class="pub-grid" id="pubGrid"></div>
     </div>
+    <div class="pub-all reveal"><a class="btn ghost" href="publications/index.html">See all publications</a></div>
   </div>
 </section>
 
@@ -650,7 +652,10 @@ track.innerHTML+=track.innerHTML;
 const grid=document.getElementById('pubGrid'),
       reader=document.getElementById('reader'),
       readerDoc=document.getElementById('readerDoc'),
-      pubs=window.ARRJAVA_PUBLICATIONS||[];
+      allPubs=window.ARRJAVA_PUBLICATIONS||[],
+      // The homepage strip shows only the newest 12; the full set lives
+      // on the library page (publications/index.html).
+      pubs=allPubs.slice(0,12);
 pubs.forEach((p,i)=>{
   const card=document.createElement('article');
   card.className='pub-card reveal';

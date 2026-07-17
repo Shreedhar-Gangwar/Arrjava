@@ -107,6 +107,11 @@ const esc = s => String(s)
   .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // Plain, single-line version of the abstract for the meta description.
 const metaText = s => esc(String(s).replace(/\s+/g, ' ').trim()).slice(0, 200);
+// URL-safe anchor slug for a category name (for in-page jump links).
+const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// Category display helpers (fall back gracefully for unmapped categories).
+const catLabel = c => CATEGORY_LABELS[c] || c;
+const catColor = c => CATEGORY_COLORS[c] || CATEGORY_FALLBACK;
 // The structured-data block search engines read to understand a page
 // is an article: headline, description, publisher, date.
 const jsonLd = p => JSON.stringify({
@@ -232,6 +237,127 @@ const doc=document.querySelector('article');
 </html>
 `;
 
+/* ---- 3b. The full library page (publications/index.html) ----
+   Every publication, grouped into category sections, with a jump-nav at
+   the top for easy traversal. Categories appear in canonical order
+   (CATEGORY_COLORS), any unmapped ones after. Newest-first within each. */
+const archivePage = (groups) => `<!DOCTYPE html>
+<!-- GENERATED FILE — do not edit. Built by build-publications.js -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Publications — ARRJAVA</title>
+<meta name="description" content="The full library of practice notes, advisory notes and client guides authored by ARRJAVA, Advocates &amp; Legal Consultants, Agra — grouped by area of law.">
+<link rel="canonical" href="${SITE_URL}/publications/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Publications — ARRJAVA">
+<meta property="og:url" content="${SITE_URL}/publications/">
+<meta property="og:site_name" content="ARRJAVA — Advocates &amp; Legal Consultants">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14181d;--ink-soft:#2a3038;--paper:#f7f4ee;--paper-deep:#efeae0;
+  --gold:#b08d3e;--gold-soft:#c9ac6a;--line:rgba(20,24,29,.14);
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'Inter',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}
+::selection{background:var(--gold);color:#fff}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:.01em}
+
+header{border-bottom:1px solid var(--line);padding:18px 6vw;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.brand .mark{width:38px;height:38px;display:block}
+.brand-text .name{font-family:var(--serif);font-size:1.15rem;letter-spacing:.32em;font-weight:600}
+.brand-text .tag{font-size:.52rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.back{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid transparent;transition:color .3s,border-color .3s}
+.back:hover{color:var(--gold);border-color:var(--gold)}
+
+main{max-width:1180px;margin:0 auto;padding:64px 6vw 90px}
+.kicker{font-size:.66rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+h1{font-size:clamp(2rem,4.4vw,3rem);line-height:1.12}
+.intro{margin-top:18px;max-width:60ch;color:var(--ink-soft)}
+
+.catnav{display:flex;flex-wrap:wrap;gap:10px 14px;margin:40px 0 8px;padding-bottom:34px;border-bottom:1px solid var(--line)}
+.catnav a{display:flex;align-items:center;gap:9px;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);padding:9px 14px;transition:border-color .3s,color .3s}
+.catnav a:hover{color:var(--ink);border-color:var(--gold)}
+.catnav .dot{width:11px;height:11px;border-radius:3px;flex:none}
+
+.catsec{margin-top:64px;scroll-margin-top:24px}
+.catsec h2{display:flex;align-items:center;gap:14px;font-size:1.5rem}
+.catsec h2 .bar{width:34px;height:8px;border-radius:4px;flex:none}
+.count{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-left:4px}
+.agrid{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+@media(max-width:960px){.agrid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.agrid{grid-template-columns:1fr}}
+.acard{background:var(--paper);border:1px solid var(--line);padding:34px 30px;display:flex;flex-direction:column;position:relative;transition:box-shadow .4s}
+.acard::before{content:"";position:absolute;top:-1px;left:-1px;right:-1px;height:8px;background:linear-gradient(180deg,color-mix(in srgb,var(--cat) 72%,#fff),var(--cat))}
+.acard:hover{box-shadow:0 20px 46px -24px rgba(20,24,29,.35)}
+.acard .date{font-family:var(--serif);font-style:italic;font-size:.82rem;color:var(--ink-soft)}
+.acard h3{font-size:1.2rem;line-height:1.3;margin:8px 0 12px}
+.acard p{font-size:.84rem;color:var(--ink-soft);flex:1}
+.acard .more{margin-top:22px;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.acard .more::after{content:"⟶";color:var(--gold)}
+
+footer{background:var(--ink);color:rgba(247,244,238,.6);padding:44px 6vw;font-size:.7rem;line-height:1.8;margin-top:80px}
+footer .fbrand{font-family:var(--serif);letter-spacing:.32em;color:var(--paper);font-size:1rem;margin-bottom:10px}
+footer .disclaimer{max-width:70ch}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="../index.html" aria-label="ARRJAVA home">
+    <svg class="mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="61" height="61" fill="none" stroke="#b08d3e" stroke-width="1.5"/>
+      <path d="M32 12 L46 50 H40.5 L32 25.5 L23.5 50 H18 Z" fill="#14181d"/>
+      <line x1="24" y1="40" x2="40" y2="40" stroke="#b08d3e" stroke-width="1.8"/>
+      <circle cx="32" cy="18" r="1.8" fill="#b08d3e"/>
+    </svg>
+    <span class="brand-text">
+      <span class="name">ARRJAVA</span><br>
+      <span class="tag">Advocates &amp; Legal Consultants</span>
+    </span>
+  </a>
+  <a class="back" href="../index.html#publications">← Home</a>
+</header>
+
+<main>
+  <p class="kicker">Publications</p>
+  <h1>The library, by area of law.</h1>
+  <p class="intro">Every practice note, advisory note and client guide authored by the chambers, grouped by area of law. Publications are provided in a read-only format for on-screen reading.</p>
+
+  <nav class="catnav" aria-label="Jump to a category">
+    ${groups.map(g => `<a href="#${slug(g.category)}"><span class="dot" style="background:${g.color}"></span>${esc(catLabel(g.category))}</a>`).join('\n    ')}
+  </nav>
+
+  ${groups.map(g => `<section class="catsec" id="${slug(g.category)}">
+    <h2><span class="bar" style="background:${g.color}"></span>${esc(catLabel(g.category))}<span class="count">${g.items.length} ${g.items.length === 1 ? 'piece' : 'pieces'}</span></h2>
+    <div class="agrid">
+      ${g.items.map(p => `<a class="acard" style="--cat:${p.color}" href="${p.id}.html">
+        <span class="date">${esc(p.date)}</span>
+        <h3>${esc(p.title)}</h3>
+        <p>${esc(p.abstract)}</p>
+        <span class="more">Read</span>
+      </a>`).join('\n      ')}
+    </div>
+  </section>`).join('\n\n  ')}
+</main>
+
+<footer>
+  <p class="fbrand">ARRJAVA</p>
+  <p class="disclaimer">This website is for informational purposes only and does not constitute solicitation, advertisement, or legal advice. In conformity with the rules of the Bar Council of India, ARRJAVA does not solicit work. Content is provided solely at the visitor's specific request. Nothing herein creates an advocate–client relationship.</p>
+</footer>
+
+</body>
+</html>
+`;
+
 /* ---- 4. Write publications.js (the data file the homepage reads) ---- */
 const dataOut = pubs.map(({ id, category, color, date, title, abstract, body }) =>
   ({ id, category, color, date, title, abstract, body }));
@@ -249,7 +375,8 @@ console.log('  wrote publications.js (' + pubs.length + ' publications)');
 const outDir = path.join(__dirname, 'publications');
 fs.mkdirSync(outDir, { recursive: true });
 const wanted = new Set(pubs.map(p => p.id + '.html'));
-fs.readdirSync(outDir).filter(f => f.endsWith('.html') && !wanted.has(f)).forEach(f => {
+// Never delete index.html (the generated library page, not a publication).
+fs.readdirSync(outDir).filter(f => f.endsWith('.html') && f !== 'index.html' && !wanted.has(f)).forEach(f => {
   fs.unlinkSync(path.join(outDir, f));
   console.log('  removed stale publications/' + f);
 });
@@ -258,9 +385,21 @@ pubs.forEach(p => {
   console.log('  wrote publications/' + p.id + '.html');
 });
 
+// Group for the library page: canonical categories first, any unmapped
+// ones after; items stay newest-first (pubs is already sorted).
+const groups = [
+  ...Object.keys(CATEGORY_COLORS),
+  ...[...new Set(pubs.map(p => p.category))].filter(c => !(c in CATEGORY_COLORS))
+]
+  .map(category => ({ category, color: catColor(category), items: pubs.filter(p => p.category === category) }))
+  .filter(g => g.items.length);
+fs.writeFileSync(path.join(outDir, 'index.html'), archivePage(groups));
+console.log('  wrote publications/index.html (library, ' + groups.length + ' categories)');
+
 /* ---- 6. Sitemap: tells search engines every page that exists ---- */
 const urls = [
   SITE_URL + '/',
+  SITE_URL + '/publications/',
   ...pubs.map(p => SITE_URL + '/publications/' + p.id + '.html')
 ];
 fs.writeFileSync(path.join(__dirname, 'sitemap.xml'),
