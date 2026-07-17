@@ -1,14 +1,6 @@
 /* GENERATED FILE — do not edit. Built by build-publications.js from content/publications/ */
 window.ARRJAVA_PUBLICATIONS = [
   {
-    "id": "admissibility-of-illegal-obtained-evidence",
-    "category": "Practice Note · Criminal Law",
-    "date": "July 2026",
-    "title": "Admissibility of illegal obtained evidence ",
-    "abstract": "It shouldn't happen",
-    "body": "<p>It's happening anyways</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
-  },
-  {
     "id": "ti-order-39",
     "category": "Practice Note · Civil Procedure",
     "date": "June 2026",
