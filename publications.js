@@ -10,6 +10,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>crimerism</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "how-to-develop-in-a-legal-battle",
+    "category": "Commentary · Legal Developments",
+    "color": "#c596c5",
+    "date": "July 2026",
+    "title": "How to develop in a legal battle",
+    "abstract": "Start with knight to e4 pawn to c2 and then bishop to d7 with castling",
+    "body": "<p>Just for reference the moves mentioned are illegal</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "is-anime-piracy-crime",
     "category": "Advisory Note · Commercial",
     "color": "#C73828",
