@@ -28,6 +28,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>We the people of xyz household solemnly swear to abide by xyz constitution</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "how-to-prevent-yourself-from-scamsfrauds",
+    "category": "Advisory Note · Commercial",
+    "color": "#C73828",
+    "date": "July 2026",
+    "title": "How to prevent yourself from scams/frauds",
+    "abstract": "Every day, repeat this to yourself: \"No one gives out anything for free.\"",
+    "body": "<p>No one</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "is-anime-piracy-crime",
     "category": "Advisory Note · Commercial",
     "color": "#C73828",
