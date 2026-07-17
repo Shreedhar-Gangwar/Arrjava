@@ -1,6 +1,15 @@
 /* GENERATED FILE — do not edit. Built by build-publications.js from content/publications/ */
 window.ARRJAVA_PUBLICATIONS = [
   {
+    "id": "typ",
+    "category": "Client Guide · Family Law",
+    "color": "#b06a4f",
+    "date": "July 2026",
+    "title": "typ",
+    "abstract": "ghj",
+    "body": "<p>fghjk;</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "ti-order-39",
     "category": "Practice Note · Civil Procedure",
     "color": "#3f6b7a",
