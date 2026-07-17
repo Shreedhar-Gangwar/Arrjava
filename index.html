@@ -190,6 +190,7 @@ footer .fine{width:100%;border-top:1px solid rgba(247,244,238,.12);margin-top:36
 #publications{background:var(--paper-deep);perspective:1200px}
 .pub-controls{display:flex;justify-content:flex-end;gap:10px;margin:44px 0 20px}
 .pub-controls.hidden{display:none}
+.pub-nav.hidden{display:none}
 .pub-nav{background:transparent;border:1px solid var(--ink);width:46px;height:46px;font-size:1rem;color:var(--ink);cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center}
 .pub-nav:hover{background:var(--ink);color:var(--paper)}
 .pub-strip{position:relative}
@@ -680,14 +681,22 @@ Object.keys(catColors).filter(c=>usedCats.has(c)).forEach(c=>{
 });
 if(legend.children.length)legend.classList.add('on');
 
-/* Horizontal strip: edge fades + arrows (only shown when there is overflow) */
+/* Horizontal strip: edge fades + arrows. Controls hide entirely when
+   everything fits; each arrow hides at its end (no left arrow at the
+   leftmost card, no right arrow at the rightmost). */
 const pubStrip=document.getElementById('pubStrip'),
-      pubControls=document.getElementById('pubControls');
+      pubControls=document.getElementById('pubControls'),
+      pubPrev=document.getElementById('pubPrev'),
+      pubNext=document.getElementById('pubNext');
 function pubFades(){
-  const overflow=grid.scrollWidth-grid.clientWidth>20;
+  const overflow=grid.scrollWidth-grid.clientWidth>20,
+        atLeft=grid.scrollLeft<=20,
+        atRight=grid.scrollLeft>=grid.scrollWidth-grid.clientWidth-20;
   pubControls.classList.toggle('hidden',!overflow);
-  pubStrip.classList.toggle('fade-l',overflow&&grid.scrollLeft>20);
-  pubStrip.classList.toggle('fade-r',overflow&&grid.scrollLeft<grid.scrollWidth-grid.clientWidth-20);
+  pubStrip.classList.toggle('fade-l',overflow&&!atLeft);
+  pubStrip.classList.toggle('fade-r',overflow&&!atRight);
+  pubPrev.classList.toggle('hidden',atLeft);
+  pubNext.classList.toggle('hidden',atRight);
 }
 grid.addEventListener('scroll',pubFades,{passive:true});
 addEventListener('resize',pubFades);
@@ -698,8 +707,8 @@ const pubGap=28;
 function pubUnit(){const c=grid.firstElementChild;return c?c.getBoundingClientRect().width+pubGap:300}
 function pubVisible(){return Math.max(1,Math.round(grid.clientWidth/pubUnit()))}
 function pubStep(){return pubVisible()*pubUnit()}
-document.getElementById('pubPrev').addEventListener('click',()=>grid.scrollBy({left:-pubStep(),behavior:'smooth'}));
-document.getElementById('pubNext').addEventListener('click',()=>grid.scrollBy({left:pubStep(),behavior:'smooth'}));
+pubPrev.addEventListener('click',()=>grid.scrollBy({left:-pubStep(),behavior:'smooth'}));
+pubNext.addEventListener('click',()=>grid.scrollBy({left:pubStep(),behavior:'smooth'}));
 function openReader(p){
   readerDoc.innerHTML=`<span class="cat">${p.category}</span><h2>${p.title}</h2><span class="date">${p.date} · ARRJAVA, Agra</span>${p.body}`;
   reader.classList.add('open');document.body.classList.add('reader-open');reader.scrollTop=0;
