@@ -1,6 +1,15 @@
 /* GENERATED FILE — do not edit. Built by build-publications.js from content/publications/ */
 window.ARRJAVA_PUBLICATIONS = [
   {
+    "id": "crime",
+    "category": "Practice Note · Criminal Law",
+    "color": "#8a3d3d",
+    "date": "July 2026",
+    "title": "crime",
+    "abstract": "crimeria",
+    "body": "<p>crimerism</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "typ",
     "category": "Client Guide · Family Law",
     "color": "#b06a4f",
