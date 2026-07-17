@@ -37,6 +37,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>No, if you do not have money</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "is-digital-owning-really-owning",
+    "category": "Advisory Note · Commercial",
+    "color": "#C73828",
+    "date": "July 2026",
+    "title": "Is digital owning really owning",
+    "abstract": "Sony would think otherwise",
+    "body": "<p>do not buy digital media just pirate it.</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "is-witnees-to-a-crime-also-a-crime",
     "category": "Practice Note · Criminal Law",
     "color": "#9C7F52",
