@@ -10,6 +10,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>crimerism</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "legal",
+    "category": "Commentary · Legal Developments",
+    "color": "#6a5a86",
+    "date": "July 2026",
+    "title": "legal",
+    "abstract": "legalia",
+    "body": "<p>legaloroty</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "typ",
     "category": "Client Guide · Family Law",
     "color": "#b06a4f",
