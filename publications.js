@@ -19,6 +19,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>No, if you do not have money</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "is-witnees-to-a-crime-also-a-crime",
+    "category": "Practice Note · Criminal Law",
+    "color": "#9C7F52",
+    "date": "July 2026",
+    "title": "Is witnees to a crime also a crime",
+    "abstract": "Yes if you are witness the crime you did",
+    "body": "<p>Get help</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "legal",
     "category": "Commentary · Legal Developments",
     "color": "#c596c5",
