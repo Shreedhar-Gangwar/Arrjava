@@ -46,6 +46,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>fghjk;</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "what-is-civil-procedure",
+    "category": "Practice Note · Civil Procedure",
+    "color": "#6b231d",
+    "date": "July 2026",
+    "title": "What is civil procedure",
+    "abstract": "Something Civil",
+    "body": "<p>need to learn this</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "ti-order-39",
     "category": "Practice Note · Civil Procedure",
     "color": "#6b231d",
