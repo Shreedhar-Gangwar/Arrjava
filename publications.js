@@ -3,6 +3,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "ti-order-39",
     "category": "Practice Note · Civil Procedure",
+    "color": "#3f6b7a",
     "date": "June 2026",
     "title": "The Three Pillars of a Temporary Injunction: Order XXXIX Before the U.P. Civil Courts",
     "abstract": "Prima facie case, balance of convenience, and irreparable injury are recited in every application and understood in few. A practitioner's note on pleading each pillar so the court can decide on a single reading.",
@@ -11,6 +12,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "msme-recovery",
     "category": "Advisory Note · Commercial",
+    "color": "#9c6b2e",
     "date": "May 2026",
     "title": "Recovering Delayed Payments: The MSME Route Agra's Businesses Overlook",
     "abstract": "For registered micro and small enterprises, the MSMED Act, 2006 offers a recovery mechanism with compound interest and a statutory deposit condition on appeal — often faster than an ordinary suit for recovery.",
@@ -19,9 +21,18 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "succession-probate",
     "category": "Client Guide · Succession",
+    "color": "#6f8257",
     "date": "April 2026",
     "title": "Succession Certificate or Legal Heir Certificate: Which Document Does Your Family Actually Need?",
     "abstract": "Banks, insurers and revenue authorities ask for different documents after a death in the family — and families routinely apply for the wrong one. A plain-language guide to what each instrument does.",
     "body": "<p>After a death in the family, institutions begin asking for documents — and the documents they ask for are not interchangeable. Applying for the wrong instrument costs months.</p>\n<h4>The legal heir certificate</h4>\n<p>Issued by the revenue authorities, it identifies the surviving heirs of the deceased. It is the working document for pensions, provident fund claims, mutation of property in revenue records, and compassionate appointments. It does not, by itself, entitle a holder to collect debts or securities.</p>\n<h4>The succession certificate</h4>\n<p>Granted by the civil court under the Indian Succession Act, 1925, it authorises the holder to collect the debts and securities of the deceased — bank deposits, shares, bonds. Banks and depositories insist on it for amounts of any significance, because it protects them in making payment.</p>\n<h4>Where a will exists</h4>\n<p>A will changes the analysis: the executor may require probate or letters of administration, depending on the assets and their location. A family that seeks advice before applying — rather than after the first rejection — ordinarily saves both time and expense.</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   }
 ];
+window.ARRJAVA_CATEGORY_COLORS = {
+  "Practice Note · Civil Procedure": "#3f6b7a",
+  "Advisory Note · Commercial": "#9c6b2e",
+  "Client Guide · Succession": "#6f8257",
+  "Client Guide · Family Law": "#b06a4f",
+  "Practice Note · Criminal Law": "#8a3d3d",
+  "Commentary · Legal Developments": "#6a5a86"
+};

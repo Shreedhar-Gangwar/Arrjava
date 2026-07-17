@@ -32,6 +32,21 @@ const SITE_URL = 'https://shreedhar-gangwar.github.io/Arrjava';
    do not edit this text (see CLAUDE.md section 6). */
 const DISCLAIMER = '<p class="pub-disclaimer">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>';
 
+/* Category → accent colour. Keys MUST match the category values in
+   .pages.yml exactly (that dropdown is what Ravi picks from). Muted,
+   earthy tones chosen to sit with the ink/paper/gold palette. To add a
+   new category: add it to .pages.yml AND here. Any category without an
+   entry falls back to the neutral colour below and still works. */
+const CATEGORY_COLORS = {
+  'Practice Note · Civil Procedure':      '#3f6b7a',  // slate blue
+  'Advisory Note · Commercial':           '#9c6b2e',  // bronze
+  'Client Guide · Succession':            '#6f8257',  // sage
+  'Client Guide · Family Law':            '#b06a4f',  // terracotta
+  'Practice Note · Criminal Law':         '#8a3d3d',  // oxblood
+  'Commentary · Legal Developments':      '#6a5a86'   // plum
+};
+const CATEGORY_FALLBACK = '#8a8375';                  // warm grey
+
 /* ---- 1. Read the content files ---- */
 const contentDir = path.join(__dirname, 'content', 'publications');
 const files = fs.readdirSync(contentDir).filter(f => f.endsWith('.md'));
@@ -55,9 +70,11 @@ const pubs = files.map(f => {
   // js-yaml gives a Date for unquoted YYYY-MM-DD; accept a string too.
   const d = meta.date instanceof Date ? meta.date : new Date(String(meta.date));
   if (isNaN(d)) { console.error('ERROR: ' + f + ' has an unreadable date.'); process.exit(1); }
+  const category = String(meta.category);
   return {
     id: f.replace(/\.md$/, ''),
-    category: String(meta.category),
+    category: category,
+    color: CATEGORY_COLORS[category] || CATEGORY_FALLBACK,
     date: MONTHS[d.getUTCMonth()] + ' ' + d.getUTCFullYear(),  // shown as e.g. "June 2026"
     sortDate: d,
     title: String(meta.title),
@@ -141,6 +158,7 @@ header{border-bottom:1px solid var(--line);padding:18px 6vw;display:flex;align-i
 .back:hover{color:var(--gold);border-color:var(--gold)}
 
 main{max-width:760px;margin:0 auto;padding:70px 6vw 90px}
+.cat-band{width:54px;height:4px;border-radius:2px;margin-bottom:24px;background:${p.color}}
 .cat{font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold)}
 h1{font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.2;margin:18px 0 10px}
 .date{font-family:var(--serif);font-style:italic;color:var(--ink-soft);margin-bottom:38px;display:block}
@@ -178,6 +196,7 @@ footer .disclaimer{max-width:70ch}
 </header>
 
 <main>
+  <div class="cat-band" aria-hidden="true"></div>
   <span class="cat">${esc(p.category)}</span>
   <h1>${esc(p.title)}</h1>
   <span class="date">${esc(p.date)} · ARRJAVA, Agra</span>
@@ -203,11 +222,13 @@ const doc=document.querySelector('article');
 `;
 
 /* ---- 4. Write publications.js (the data file the homepage reads) ---- */
-const dataOut = pubs.map(({ id, category, date, title, abstract, body }) =>
-  ({ id, category, date, title, abstract, body }));
+const dataOut = pubs.map(({ id, category, color, date, title, abstract, body }) =>
+  ({ id, category, color, date, title, abstract, body }));
 fs.writeFileSync(path.join(__dirname, 'publications.js'),
   '/* GENERATED FILE — do not edit. Built by build-publications.js from content/publications/ */\n' +
-  'window.ARRJAVA_PUBLICATIONS = ' + JSON.stringify(dataOut, null, 2) + ';\n');
+  'window.ARRJAVA_PUBLICATIONS = ' + JSON.stringify(dataOut, null, 2) + ';\n' +
+  // Category → colour map, in canonical order, for the homepage legend.
+  'window.ARRJAVA_CATEGORY_COLORS = ' + JSON.stringify(CATEGORY_COLORS, null, 2) + ';\n');
 console.log('  wrote publications.js (' + pubs.length + ' publications)');
 
 /* ---- 5. Write one page per publication; remove pages whose
