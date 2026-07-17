@@ -38,14 +38,25 @@ const DISCLAIMER = '<p class="pub-disclaimer">This note is for general informati
    new category: add it to .pages.yml AND here. Any category without an
    entry falls back to the neutral colour below and still works. */
 const CATEGORY_COLORS = {
-  'Practice Note · Civil Procedure':      '#3f6b7a',  // slate blue
-  'Advisory Note · Commercial':           '#9c6b2e',  // bronze
-  'Client Guide · Succession':            '#6f8257',  // sage
-  'Client Guide · Family Law':            '#b06a4f',  // terracotta
-  'Practice Note · Criminal Law':         '#8a3d3d',  // oxblood
-  'Commentary · Legal Developments':      '#6a5a86'   // plum
+  'Practice Note · Civil Procedure':      '#6b231d',
+  'Advisory Note · Commercial':           '#C73828',
+  'Client Guide · Succession':            '#ABEB9D',
+  'Client Guide · Family Law':            '#283e2a',
+  'Practice Note · Criminal Law':         '#9C7F52',
+  'Commentary · Legal Developments':      '#c596c5'
 };
 const CATEGORY_FALLBACK = '#8a8375';                  // warm grey
+
+/* Short labels shown in the homepage legend (the cards themselves still
+   show the full category). Keys must match CATEGORY_COLORS. */
+const CATEGORY_LABELS = {
+  'Practice Note · Civil Procedure':      'Civil Procedure',
+  'Advisory Note · Commercial':           'Commercial Law',
+  'Client Guide · Succession':            'Succession Law',
+  'Client Guide · Family Law':            'Family Law',
+  'Practice Note · Criminal Law':         'Criminal Law',
+  'Commentary · Legal Developments':      'Legal Developments'
+};
 
 /* ---- 1. Read the content files ---- */
 const contentDir = path.join(__dirname, 'content', 'publications');
@@ -227,8 +238,10 @@ const dataOut = pubs.map(({ id, category, color, date, title, abstract, body }) 
 fs.writeFileSync(path.join(__dirname, 'publications.js'),
   '/* GENERATED FILE — do not edit. Built by build-publications.js from content/publications/ */\n' +
   'window.ARRJAVA_PUBLICATIONS = ' + JSON.stringify(dataOut, null, 2) + ';\n' +
-  // Category → colour map, in canonical order, for the homepage legend.
-  'window.ARRJAVA_CATEGORY_COLORS = ' + JSON.stringify(CATEGORY_COLORS, null, 2) + ';\n');
+  // Category → colour and → short-label maps, in canonical order, for
+  // the homepage legend.
+  'window.ARRJAVA_CATEGORY_COLORS = ' + JSON.stringify(CATEGORY_COLORS, null, 2) + ';\n' +
+  'window.ARRJAVA_CATEGORY_LABELS = ' + JSON.stringify(CATEGORY_LABELS, null, 2) + ';\n');
 console.log('  wrote publications.js (' + pubs.length + ' publications)');
 
 /* ---- 5. Write one page per publication; remove pages whose

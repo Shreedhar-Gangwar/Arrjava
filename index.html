@@ -664,11 +664,12 @@ pubs.forEach((p,i)=>{
    canonical order defined by the build. */
 const legend=document.getElementById('pubLegend'),
       catColors=window.ARRJAVA_CATEGORY_COLORS||{},
+      catLabels=window.ARRJAVA_CATEGORY_LABELS||{},
       usedCats=new Set(pubs.map(p=>p.category));
 Object.keys(catColors).filter(c=>usedCats.has(c)).forEach(c=>{
   const item=document.createElement('span');
   item.className='lg';
-  item.innerHTML=`<span class="sw" style="background:${catColors[c]}"></span>${c}`;
+  item.innerHTML=`<span class="sw" style="background:${catColors[c]}"></span>${catLabels[c]||c}`;
   legend.appendChild(item);
 });
 if(legend.children.length)legend.classList.add('on');

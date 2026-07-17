@@ -30,7 +30,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "ti-order-39",
     "category": "Practice Note · Civil Procedure",
-    "color": "#3f6b7a",
+    "color": "#6b231d",
     "date": "June 2026",
     "title": "The Three Pillars of a Temporary Injunction: Order XXXIX Before the U.P. Civil Courts",
     "abstract": "Prima facie case, balance of convenience, and irreparable injury are recited in every application and understood in few. A practitioner's note on pleading each pillar so the court can decide on a single reading.",
@@ -39,7 +39,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "msme-recovery",
     "category": "Advisory Note · Commercial",
-    "color": "#9c6b2e",
+    "color": "#C73828",
     "date": "May 2026",
     "title": "Recovering Delayed Payments: The MSME Route Agra's Businesses Overlook",
     "abstract": "For registered micro and small enterprises, the MSMED Act, 2006 offers a recovery mechanism with compound interest and a statutory deposit condition on appeal — often faster than an ordinary suit for recovery.",
@@ -48,7 +48,7 @@ window.ARRJAVA_PUBLICATIONS = [
   {
     "id": "succession-probate",
     "category": "Client Guide · Succession",
-    "color": "#6f8257",
+    "color": "#ABEB9D",
     "date": "April 2026",
     "title": "Succession Certificate or Legal Heir Certificate: Which Document Does Your Family Actually Need?",
     "abstract": "Banks, insurers and revenue authorities ask for different documents after a death in the family — and families routinely apply for the wrong one. A plain-language guide to what each instrument does.",
@@ -56,10 +56,18 @@ window.ARRJAVA_PUBLICATIONS = [
   }
 ];
 window.ARRJAVA_CATEGORY_COLORS = {
-  "Practice Note · Civil Procedure": "#3f6b7a",
-  "Advisory Note · Commercial": "#9c6b2e",
-  "Client Guide · Succession": "#6f8257",
-  "Client Guide · Family Law": "#b06a4f",
-  "Practice Note · Criminal Law": "#8a3d3d",
-  "Commentary · Legal Developments": "#6a5a86"
+  "Practice Note · Civil Procedure": "#6b231d",
+  "Advisory Note · Commercial": "#C73828",
+  "Client Guide · Succession": "#ABEB9D",
+  "Client Guide · Family Law": "#283e2a",
+  "Practice Note · Criminal Law": "#9C7F52",
+  "Commentary · Legal Developments": "#c596c5"
+};
+window.ARRJAVA_CATEGORY_LABELS = {
+  "Practice Note · Civil Procedure": "Civil Procedure",
+  "Advisory Note · Commercial": "Commercial Law",
+  "Client Guide · Succession": "Succession Law",
+  "Client Guide · Family Law": "Family Law",
+  "Practice Note · Criminal Law": "Criminal Law",
+  "Commentary · Legal Developments": "Legal Developments"
 };
