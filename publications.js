@@ -10,6 +10,15 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>crimerism</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
+    "id": "is-anime-piracy-crime",
+    "category": "Advisory Note · Commercial",
+    "color": "#C73828",
+    "date": "July 2026",
+    "title": "Is anime piracy crime",
+    "abstract": "Yes, if there is easy and affordable access",
+    "body": "<p>No, if you do not have money</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
+  },
+  {
     "id": "legal",
     "category": "Commentary · Legal Developments",
     "color": "#c596c5",
