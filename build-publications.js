@@ -270,9 +270,7 @@ fs.writeFileSync(path.join(__dirname, 'sitemap.xml'),
   '\n</urlset>\n');
 console.log('  wrote sitemap.xml (' + urls.length + ' pages)');
 
-/* ---- 7. robots.txt: points crawlers at the sitemap.
-   publish.html is not listed here on purpose — it already carries a
-   noindex tag, and robots.txt entries are public and would advertise it. */
+/* ---- 7. robots.txt: points crawlers at the sitemap. ---- */
 fs.writeFileSync(path.join(__dirname, 'robots.txt'),
   'User-agent: *\nAllow: /\nSitemap: ' + SITE_URL + '/sitemap.xml\n');
 console.log('  wrote robots.txt');

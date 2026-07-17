@@ -41,11 +41,8 @@ commits in this repo.
   areas, maxims ribbon, philosophy, two partner profiles, publications grid, contact.
   Has an "EDITING GUIDE" comment for the owner at the top. Loads `publications.js`
   from the same directory.
-- `publish.html` — the private "Publishing Desk" admin page (`noindex, nofollow`).
-  A form where the owner composes a publication, previews it, and downloads a
-  regenerated `publications.js` containing all existing publications plus the new one,
-  newest first. Entries with the same title-derived `id` replace the older entry
-  rather than duplicating it.
+- (`publish.html` — the old "Publishing Desk" admin page — was REMOVED 2026-07-17,
+  superseded by the Pages CMS flow. Recoverable from git history if ever needed.)
 - `content/publications/*.md` — THE CONTENT DATABASE since 2026-07-16 (see landmines).
   One file per publication: YAML front matter (`title`, `category`, `date`,
   `abstract`) + markdown body. Edited via the Pages CMS admin UI or by hand.
@@ -146,16 +143,12 @@ node build-publications.js
 - Update `SITE_URL` in `build-publications.js`, re-run `node build-publications.js`.
 - Add a `_next` hidden field to the contact form in `index.html` with the live URL,
   so visitors return to the site instead of FormSubmit's generic thank-you page.
-- Decide `publish.html`'s fate (unauthenticated; superseded once the admin UI lands).
 - Register the site + sitemap with Google Search Console.
-5. **Regenerated `publications.js` will look different from the current one.** The
-   current file is hand-formatted with template-literal bodies; the publishing desk
-   generates JSON formatting instead. Functionally compatible (same array, same fields),
-   but the file's appearance changing after first use of publish.html is expected, not
-   a corruption.
-6. Publication fields are injected into the page with `innerHTML` without escaping on
-   the public page (the publishing desk escapes at authoring time). Fine while the only
-   author is the owner; worth knowing if content ever comes from anywhere else.
+
+Note: publication text fields (title, category, abstract) are injected into the
+homepage with `innerHTML` without escaping. Content now comes only through the CMS
+(the owner / Ravi), so it is trusted; worth knowing if content ever comes from
+elsewhere.
 
 Owner approved the file renames and git setup on 2026-07-16 but has not yet explicitly
 confirmed the site description above matches his understanding.
@@ -177,23 +170,15 @@ The disclaimer text lives in `build-publications.js` (`DISCLAIMER` constant). Pe
 section 6, never alter that text. Content files must not contain it — the build would
 not deduplicate a hand-typed copy.
 
-**`publish.html` is LEGACY as of 2026-07-16.**
-Superseded by the Pages CMS admin flow. Its download-regenerates-the-file mechanism
-now conflicts with the generated `publications.js` — using it and uploading its output
-would be overwritten by the next build (content would survive in git, but the
-publication made that way would vanish). Retirement is pending an explicit owner
-decision; until then it stays unlinked and noindexed. Do not "fix" it to match the
-new system.
+**`publish.html` was REMOVED 2026-07-17 (owner-approved).**
+The old "Publishing Desk" is gone — superseded by the Pages CMS flow. Do not recreate
+it: its download-regenerates-the-file mechanism conflicts with the generated
+`publications.js`. It remains recoverable from git history if ever needed.
 
 **CSS is inlined in `<style>` blocks, seemingly duplicated across pages.**
 A design change likely means editing several files identically. Extracting a shared
 stylesheet is probably worth doing, but it is a real refactor. Propose it, explain the
 risk, wait for a yes.
-
-**`publish.html` is marked private and `noindex`.**
-It is an unauthenticated admin page. Do not link it from any public page. Do not add it
-to a sitemap or nav. If deployment is ever discussed, raise that anyone with the URL
-can use it.
 
 ## 4. How to work here
 
@@ -224,7 +209,7 @@ python -m http.server 8000
 
 (On this Windows machine the command is `python`; on Mac/Linux it may be `python3`.)
 
-Then open `http://localhost:8000/`. Use this for all testing, including `publish.html`.
+Then open `http://localhost:8000/`. Use this for all testing.
 Update this section if the real setup turns out to be different.
 
 ## 6. Content and tone
