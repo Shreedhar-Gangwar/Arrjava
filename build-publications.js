@@ -112,6 +112,13 @@ const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
 // Category display helpers (fall back gracefully for unmapped categories).
 const catLabel = c => CATEGORY_LABELS[c] || c;
 const catColor = c => CATEGORY_COLORS[c] || CATEGORY_FALLBACK;
+// Lowercased plain-text blob for a publication, used by the library
+// page's keyword search: title + category + abstract + body (tags
+// stripped). esc() keeps it safe inside an HTML attribute.
+const searchText = p => esc(
+  (p.title + ' ' + p.category + ' ' + p.abstract + ' ' +
+   String(p.body).replace(/<[^>]+>/g, ' '))
+  .replace(/\s+/g, ' ').trim().toLowerCase());
 // The structured-data block search engines read to understand a page
 // is an article: headline, description, publisher, date.
 const jsonLd = p => JSON.stringify({
@@ -283,7 +290,11 @@ main{max-width:1180px;margin:0 auto;padding:64px 6vw 90px}
 h1{font-size:clamp(2rem,4.4vw,3rem);line-height:1.12}
 .intro{margin-top:18px;max-width:60ch;color:var(--ink-soft)}
 
-.filters{display:flex;flex-wrap:wrap;gap:10px 12px;margin:40px 0 8px;padding-bottom:34px;border-bottom:1px solid var(--line)}
+.pubsearch{margin-top:36px}
+.pubsearch input{width:100%;max-width:440px;background:transparent;border:1px solid var(--line);padding:13px 16px;font-family:var(--sans);font-size:.95rem;color:var(--ink);outline:none;transition:border-color .3s}
+.pubsearch input:focus{border-color:var(--gold)}
+.noresults{margin-top:48px;color:var(--ink-soft);font-size:.95rem}
+.filters{display:flex;flex-wrap:wrap;gap:10px 12px;margin:26px 0 8px;padding-bottom:34px;border-bottom:1px solid var(--line)}
 .filt{display:flex;align-items:center;gap:9px;font-family:inherit;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);background:transparent;border:1px solid var(--line);padding:9px 15px;cursor:pointer;transition:border-color .3s,color .3s,background .3s}
 .filt:hover{color:var(--ink);border-color:var(--gold)}
 .filt.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
@@ -333,6 +344,10 @@ footer .disclaimer{max-width:70ch}
   <h1>The library, by area of law.</h1>
   <p class="intro">Every practice note, advisory note and client guide authored by the chambers, grouped by area of law. Publications are provided in a read-only format for on-screen reading.</p>
 
+  <div class="pubsearch">
+    <input id="pubSearch" type="search" placeholder="Search publications by keyword…" aria-label="Search publications by keyword" autocomplete="off">
+  </div>
+
   <nav class="filters" aria-label="Filter by category">
     <button class="filt on" type="button" data-cat="all" aria-pressed="true">All</button>
     ${groups.map(g => `<button class="filt" type="button" data-cat="${slug(g.category)}" aria-pressed="false"><span class="dot" style="background:${g.color}"></span>${esc(catLabel(g.category))}</button>`).join('\n    ')}
@@ -341,7 +356,7 @@ footer .disclaimer{max-width:70ch}
   ${groups.map(g => `<section class="catsec" id="${slug(g.category)}">
     <h2><span class="bar" style="background:${g.color}"></span>${esc(catLabel(g.category))}<span class="count">${g.items.length} ${g.items.length === 1 ? 'piece' : 'pieces'}</span></h2>
     <div class="agrid">
-      ${g.items.map(p => `<a class="acard" style="--cat:${p.color}" href="${p.id}.html">
+      ${g.items.map(p => `<a class="acard" style="--cat:${p.color}" data-search="${searchText(p)}" href="${p.id}.html">
         <span class="date">${esc(p.date)}</span>
         <h3>${esc(p.title)}</h3>
         <p>${esc(p.abstract)}</p>
@@ -349,6 +364,8 @@ footer .disclaimer{max-width:70ch}
       </a>`).join('\n      ')}
     </div>
   </section>`).join('\n\n  ')}
+
+  <p class="noresults" id="noResults" style="display:none">No publications match your search.</p>
 </main>
 
 <footer>
@@ -357,17 +374,42 @@ footer .disclaimer{max-width:70ch}
 </footer>
 
 <script>
-/* Category filter tabs. Without JS, every section shows (graceful). */
+/* Category filter tabs + keyword search. A card shows when it matches
+   the active category (or All) AND the search box. Section headings and
+   per-category counts follow what's visible. Without JS every section
+   shows (graceful). */
 (function(){
+  var input=document.getElementById('pubSearch');
   var filts=[].slice.call(document.querySelectorAll('.filt'));
   var secs=[].slice.call(document.querySelectorAll('.catsec'));
+  var noRes=document.getElementById('noResults');
+  var activeCat='all';
+  function apply(){
+    var q=(input.value||'').trim().toLowerCase();
+    var total=0;
+    secs.forEach(function(sec){
+      var shown=0;
+      [].slice.call(sec.querySelectorAll('.acard')).forEach(function(card){
+        var catOk=activeCat==='all'||sec.id===activeCat;
+        var qOk=!q||card.getAttribute('data-search').indexOf(q)!==-1;
+        var show=catOk&&qOk;
+        card.style.display=show?'':'none';
+        if(show){shown++;total++;}
+      });
+      sec.style.display=shown?'':'none';
+      var c=sec.querySelector('.count');
+      if(c)c.textContent=shown+(shown===1?' piece':' pieces');
+    });
+    noRes.style.display=total?'none':'';
+  }
   filts.forEach(function(b){
     b.addEventListener('click',function(){
       filts.forEach(function(x){var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');});
-      var cat=b.getAttribute('data-cat');
-      secs.forEach(function(s){s.style.display=(cat==='all'||s.id===cat)?'':'none';});
+      activeCat=b.getAttribute('data-cat');
+      apply();
     });
   });
+  input.addEventListener('input',apply);
 })();
 </script>
 </body>
