@@ -1,15 +1,6 @@
 /* GENERATED FILE — do not edit. Built by build-publications.js from content/publications/ */
 window.ARRJAVA_PUBLICATIONS = [
   {
-    "id": "crime",
-    "category": "Practice Note · Criminal Law",
-    "color": "#9C7F52",
-    "date": "July 2026",
-    "title": "crime",
-    "abstract": "crimeria",
-    "body": "<p>crimerism</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
-  },
-  {
     "id": "how-to-develop-in-a-legal-battle",
     "category": "Commentary · Legal Developments",
     "color": "#c596c5",
