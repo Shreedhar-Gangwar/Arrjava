@@ -73,15 +73,6 @@ window.ARRJAVA_PUBLICATIONS = [
     "body": "<p>Get help</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
-    "id": "legal",
-    "category": "Commentary · Legal Developments",
-    "color": "#c596c5",
-    "date": "July 2026",
-    "title": "legal",
-    "abstract": "legalia",
-    "body": "<p>legaloroty</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
-  },
-  {
     "id": "should-court-have-the-final-say-in-your-case",
     "category": "Commentary · Legal Developments",
     "color": "#c596c5",
@@ -98,15 +89,6 @@ window.ARRJAVA_PUBLICATIONS = [
     "title": "Should there be equal partition of family car",
     "abstract": "Yes but who gets the driver's side?",
     "body": "<p>Stone, paper, scissors</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
-  },
-  {
-    "id": "typ",
-    "category": "Client Guide · Family Law",
-    "color": "#283e2a",
-    "date": "July 2026",
-    "title": "typ",
-    "abstract": "ghj",
-    "body": "<p>fghjk;</p>\n<p class=\"pub-disclaimer\">This note is for general information only and is not legal advice. Facts of each matter differ; obtain specific advice before acting.</p>"
   },
   {
     "id": "what-is-civil-procedure",
